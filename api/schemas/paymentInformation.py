@@ -22,5 +22,5 @@ class PaymentInformation(PaymentInformationBase):
     cardInformation: str
     paymentType: str
 
-    class ConfigDict:
+    class Config:
         from_attributes = True

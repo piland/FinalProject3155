@@ -1,6 +1,8 @@
 import uvicorn
 from fastapi import Depends, FastAPI, HTTPException
+from sqlalchemy.orm import Session
 from fastapi.middleware.cors import CORSMiddleware
+
 from .routers import index as indexRoute
 from .models import model_loader
 from .dependencies.config import conf

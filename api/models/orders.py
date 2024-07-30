@@ -1,7 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME
 from sqlalchemy.orm import relationship
 from datetime import datetime
-from ..dependencies.database import Base
+from api.dependencies.database import Base
 
 
 class Order(Base):
@@ -13,5 +13,5 @@ class Order(Base):
     description = Column(String(300))
     accountId = Column(Integer, ForeignKey("accounts.id"))
 
-    accounts = relationship('accounts', back_populates='order')
+    accounts = relationship('Account', back_populates='order')
     order_details = relationship("OrderDetail", back_populates="order")

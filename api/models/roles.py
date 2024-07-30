@@ -1,7 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME
 from sqlalchemy.orm import relationship
-from datetime import datetime
-from ..dependencies.database import Base
+from api.dependencies.database import Base
 
 class Role(Base):
     __tablename__ = 'roles'
@@ -10,4 +9,4 @@ class Role(Base):
     description = Column(String(250), nullable=False)
     title = Column(String(250), nullable=False)
 
-    accounts = relationship('accounts', back_populates='role')
+    accounts = relationship('Account', back_populates='roles')

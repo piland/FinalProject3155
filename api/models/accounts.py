@@ -1,7 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME
 from sqlalchemy.orm import relationship
-from datetime import datetime
-from ..dependencies.database import Base
+from api.dependencies.database import Base
 
 class Account(Base):
     __tablename__ = "accounts"
@@ -15,7 +14,7 @@ class Account(Base):
     rolesId = Column(Integer, ForeignKey("roles.id"), nullable=False)
     paymentInformationId = Column(Integer, ForeignKey("paymentMethod.id"), nullable=False)
 
-    reviews = relationship("reviews", back_populates="account")
-    orders = relationship("orders", back_populates="account")
-    paymentInformation = relationship("paymentMethods", back_populates="accounts")
-    roles = relationship("roles", back_populates="accounts")
+    reviews = relationship("Review", back_populates="account")
+    orders = relationship("Order", back_populates="account")
+    paymentInformation = relationship("PaymentInformation", back_populates="accounts")
+    roles = relationship("Role", back_populates="accounts")
