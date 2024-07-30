@@ -9,6 +9,7 @@ def create(db: Session, request):
         name=request.name,
         email=request.email,
         age=request.age,
+        phoneNumber=request.phoneNumber,
         password=request.password,
         rolesId=request.rolesId
     )
