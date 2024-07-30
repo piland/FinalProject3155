@@ -10,9 +10,9 @@ class Account(Base):
     email = Column(String(150), unique=True, nullable=False)
     age = Column(Integer, nullable=True)
     phoneNumber = Column(String(25), nullable=True)
-    password = Column(String, nullable=False)
+    password = Column(String(100), nullable=False)
     rolesId = Column(Integer, ForeignKey("roles.id"), nullable=False)
-    paymentInformationId = Column(Integer, ForeignKey("paymentMethod.id"), nullable=False)
+    paymentInformationId = Column(Integer, ForeignKey("paymentInformation.id"), nullable=False)
 
     reviews = relationship("Review", back_populates="account")
     orders = relationship("Order", back_populates="account")

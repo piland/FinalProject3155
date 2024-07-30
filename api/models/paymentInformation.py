@@ -7,8 +7,8 @@ class PaymentInformation(Base):
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     balanceOnAccount = Column(DECIMAL, default=0)
-    cardInformation = Column(String, nullable=False)
-    paymentType = Column(String, nullable=False)
+    cardInformation = Column(String(100), nullable=False)
+    paymentType = Column(String(100), nullable=False)
     lastTransactionStatus = Column(BOOLEAN, nullable=True)
 
     accounts = relationship('Account', back_populates='paymentInformation')

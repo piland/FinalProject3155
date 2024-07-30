@@ -1,12 +1,10 @@
 import uvicorn
-from fastapi import Depends, FastAPI, HTTPException
-from sqlalchemy.orm import Session
+from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
-from .routers import index as indexRoute
-from .models import model_loader
-from .dependencies.config import conf
-
+from api.dependencies.config import conf
+from api.models import model_loader
+from api.routers import index as index_router
 
 app = FastAPI()
 
@@ -21,7 +19,7 @@ app.add_middleware(
 )
 
 model_loader.index()
-indexRoute.load_routes(app)
+index_router.load_routes(app)
 
 
 if __name__ == "__main__":
