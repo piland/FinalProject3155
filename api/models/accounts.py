@@ -10,8 +10,10 @@ class Account(Base):
     name = Column(String(150), nullable=False)
     email = Column(String(150), unique=True, nullable=False)
     age = Column(Integer, nullable=True)
+    phoneNumber = Column(String(25), nullable=True)
     password = Column(String, nullable=False)
     rolesId = Column(Integer, ForeignKey("roles.id"), nullable=False)
-    paymentMethod = Column(String(150), nullable=True)
+    paymentInformationId = Column(Integer, ForeignKey("paymentMethod.id"), nullable=False)
 
+    paymentInformation = relationship("paymentMethods", back_populates="accounts")
     roles = relationship("roles", back_populates="accounts")

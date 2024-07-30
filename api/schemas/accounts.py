@@ -5,6 +5,7 @@ from pydantic import BaseModel
 class AccountBase(BaseModel):
     name: str
     age: Optional[int] = None
+    phoneNumber: Optional[str] = None
 
 class AccountCreate(AccountBase):
     email: str
