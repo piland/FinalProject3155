@@ -1,15 +1,14 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME
+from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME, BOOLEAN
 from sqlalchemy.orm import relationship
-from datetime import datetime
-from ..dependencies.database import Base
+from api.dependencies.database import Base
 
 class PaymentInformation(Base):
     __tablename__ = 'paymentInformation'
 
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     balanceOnAccount = Column(DECIMAL, default=0)
-    cardInformation = Column(String, nullable=False)
-    paymentType = Column(String, nullable=False)
-    lastTransactionStatus = Column(bool, nullable=True)
+    cardInformation = Column(String(100), nullable=False)
+    paymentType = Column(String(100), nullable=False)
+    lastTransactionStatus = Column(BOOLEAN, nullable=True)
 
-    accounts = relationship('accounts', back_populates='paymentInformation')
+    accounts = relationship('Account', back_populates='paymentInformation')

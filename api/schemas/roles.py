@@ -16,8 +16,6 @@ class RoleUpdate(BaseModel):
 
 class Role(RoleBase):
     id: int
-    title: str
-    description: str
 
-    class ConfigDict:
+    class Config:
         from_attributes = True

@@ -24,5 +24,5 @@ class Review(ReviewBase):
     stars: int
     description: str
 
-    class ConfigDict:
+    class Config:
         from_attributes = True

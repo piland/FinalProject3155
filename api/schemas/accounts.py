@@ -24,5 +24,5 @@ class Account(AccountBase):
     email: str
     password: str
 
-    class ConfigDict:
+    class Config:
         from_attributes = True
