@@ -15,5 +15,7 @@ class Account(Base):
     rolesId = Column(Integer, ForeignKey("roles.id"), nullable=False)
     paymentInformationId = Column(Integer, ForeignKey("paymentMethod.id"), nullable=False)
 
+    reviews = relationship("reviews", back_populates="account")
+    orders = relationship("orders", back_populates="account")
     paymentInformation = relationship("paymentMethods", back_populates="accounts")
     roles = relationship("roles", back_populates="accounts")
