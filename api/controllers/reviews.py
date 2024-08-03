@@ -8,7 +8,7 @@ def create(db: Session, request):
     new_item = model.Review(
         stars=request.stars,
         description=request.description,
-        accountId=request.accountId
+        account_id=request.account_id
     )
 
     try:

@@ -8,6 +8,6 @@ class Review(Base):
     id = Column(Integer, primary_key=True, autoincrement=True, index=True)
     stars = Column(Integer, nullable=False)
     description = Column(String(750), nullable=False, default="")
-    accountId = Column(Integer, ForeignKey("accounts.id"), nullable=False)
+    account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
 
     account = relationship("Account", back_populates="reviews")
