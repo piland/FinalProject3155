@@ -67,3 +67,30 @@ def delete(db: Session, item_id):
         error = str(e.__dict__['orig'])
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
     return Response(status_code=status.HTTP_204_NO_CONTENT)
+
+def get_order_trends(db: Session):
+    today = date.today()
+    try:
+        # Count total orders for today
+        total_orders = db.query(func.count(model.OrderDetail.id)).filter(func.date(model.OrderDetail.order_date) == today).scalar()
+
+        # Count orders for each dish and sort from least to greatest
+        dish_counts = db.query(
+            model.OrderDetail.sandwich_id,
+            func.count(model.OrderDetail.sandwich_id).label('count')
+        ).filter(
+            func.date(model.OrderDetail.order_date) == today
+        ).group_by(
+            model.OrderDetail.sandwich_id
+        ).order_by('count').all()
+
+        # Format the result
+        trends = {
+            "total_orders_today": total_orders,
+            "dish_orders": [{"sandwich_id": dish[0], "count": dish[1]} for dish in dish_counts]
+        }
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+
+    return trends

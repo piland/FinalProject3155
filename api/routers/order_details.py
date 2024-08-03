@@ -33,3 +33,7 @@ def update(item_id: int, request: schema.OrderDetailUpdate, db: Session = Depend
 @router.delete("/{item_id}")
 def delete(item_id: int, db: Session = Depends(get_db)):
     return controller.delete(db=db, item_id=item_id)
+
+@router.get("/order-trends")
+def order_trends(db: Session = Depends(get_db)):
+    return controller.get_order_trends(db)
