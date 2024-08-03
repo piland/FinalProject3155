@@ -49,10 +49,10 @@ def update(item_id, amount = None, order_id = None, sandwich_id = None):
         new_data["sandwich_id"] = sandwich_id
     response = requests.put(url, json = new_data)
     if response == 200:
-        print(f"Payment Info Updated: {response.json()}")
+        print(f"Order Detail Updated: {response.json()}")
         return response.json()
     else:
-        print(f"Failed to Update Payment Info: {response.status_code}")
+        print(f"Failed to Order Detail Info: {response.status_code}")
         return None
 
 def delete(item_id):
