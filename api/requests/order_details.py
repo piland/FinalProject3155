@@ -11,10 +11,10 @@ def create(amount, order_id, sandwich_id):
     }
     response = requests.post(url, json = data)
     if response.status_code == 200:
-        print(f"Added Payment Information: {response.json()}")
+        print(f"Added Order Details: {response.json()}")
         return response.json()
     else:
-        print(f"Failed to Add Payment Information: {response.status_code}")
+        print(f"Failed to Add Order Details: {response.status_code}")
         return None
 
 
@@ -22,20 +22,20 @@ def read_all():
     url = f"{base_url}/orderdetails/"
     response = requests.get(url)
     if response.status_code == 200:
-        print(f"Customer Payment Information: {response.json()}")
+        print(f"Customer Order Details: {response.json()}")
         return response.json()
     else:
-        print(f"Failed to Get Payment Information: {response.status_code}")
+        print(f"Failed to Get Order Details: {response.status_code}")
         return None
 
 def read_one(item_id):
     url = f"{base_url}/orderdetails/{item_id}"
     response = requests.get(url)
     if response.status_code == 200:
-        print(f"Customer Payment Information: {response.json()}")
+        print(f"Customer Order Details: {response.json()}")
         return response.json()
     else:
-        print(f"Failed to Get Payment Information: {response.status_code}")
+        print(f"Failed to Get Order Details: {response.status_code}")
         return None
 
 def update(item_id, amount = None, order_id = None, sandwich_id = None):
@@ -59,8 +59,8 @@ def delete(item_id):
     url = f"{base_url}/orderdetails/{item_id}"
     response = requests.delete(url)
     if response == 200:
-        print(f"Deleted Payment Information: {response.json()}")
+        print(f"Deleted Order Details: {response.json()}")
         return response.json()
     else:
-        print(f"Failed to Delete Payment Information: {response.status_code}")
+        print(f"Failed to Delete Order Details: {response.status_code}")
         return None
