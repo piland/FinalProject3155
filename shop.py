@@ -1,3 +1,5 @@
+from api.requests import accounts, order_details, orders, paymentInformation, reviews
+
 class Shop:
     def __init__(self):
         #If active_user_account remains None, account is guest
@@ -27,15 +29,15 @@ class Shop:
     #QUESTION: HOW CAN I VIEW THE LIST OF ALL ORDERS? IS THERE AN OPTION TO VIEW THE DETAILS OF A SPECIFIC ORDER?
     #TODO: VIEW ALL ORDERS
     def show_all_orders(self):
-        pass
+        orders.read_all()
 
     #TODO: VIEW SINGLE ORDER DETAILS
-    def show_order_details(self, order):
-        pass
+    def show_order_details(self, order_id):
+        order_details.read_one(order_id)
 
     #QUESTION: HOW CAN I IDENTIFY DISHES THAT ARE LESS POPULAR OR HAVE RECEIVED COMPLAINTS? IS THERE A WAY TO UNDERSTAND CUSTOMER DISATISFACTION?
     #TODO: VIEW UNPOPULAR ORDERS, ASK FOR THRESHOLD (eg. order constitutes 10% or less of sales or something)
-    def show_unpopular_orders(self):
+    def show_unpopular_orders(self, threshold):
         pass
 
     #TODO: SHOW LOW-RATED ORDERS, ASK FOR THRESHOLD (eg. less than 2 stars)
@@ -47,7 +49,7 @@ class Shop:
         pass
 
     #QUESTION: CAN I CREATE AND MANAGE PROMOTIONAL CODES, INCLUDING SETTING EXPIRATION DATES?
-    #TODO: CREATE PROMO CODES
+    #TODO: CREATE PROMO CODES, ADD PROMO API
     def create_promo_code(self):
         pass
 
@@ -62,12 +64,14 @@ class Shop:
     #QUESTION: HOW CAN I DETERMINE THE TOTAL REVENUE GENERATED FROM FOOD SALES ON ANY GIVEN DAY?
     #TODO: SHOW TOTAL REVENUE
     def show_total_revenue(self, date):
-        pass
+        order_list = orders.read_all()
+        #TODO: sum orders totals on date
 
     #QUESTION: IS THERE A WAY TO VIEW THE LIST OF ORDERS WITHIN A SPECIFIC DATE RANGE?
     #TODO: LIST OF ORDER IN DATE RANGE
     def show_orders_between_dates(self, start_date, end_date):
-        pass
+        order_list = orders.read_all()
+        #TODO: filter order_list to show only between start_date and end_date
 
     """CUSTOMER FUNCTIONS"""
     """========================================================"""
@@ -101,8 +105,9 @@ class Shop:
 
     #QUESTION: HOW CAN I RATE AND REVIEW DISHES I'VE ORDERED?
     #TODO: IMPLEMENT BOTH GET AND PUT REVIEW FUNCTIONS
+    #TODO: DONT WE NEED TO SPECIFY WHAT ITEM WERE REVIEWING?
     def write_review(self, menu_item, stars, description):
-        pass
+        reviews.create(stars, description)
 
     def get_reviews_for_single_item(self, menu_item):
         pass
