@@ -13,5 +13,5 @@ class Order(Base):
     description = Column(String(300))
     accountId = Column(Integer, ForeignKey("accounts.id"))
 
-    accounts = relationship('Account', back_populates='order')
+    # accounts = relationship('Account', back_populates='order')
     order_details = relationship("OrderDetail", back_populates="order")
