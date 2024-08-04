@@ -1,7 +1,12 @@
 from api.requests import accounts, order_details, orders, payment_information, reviews
+from api.models.orders import Order
+from api.controllers.orders import create as create_order
+from api.models.order_details import OrderDetail
+from api.controllers.order_details import create as create_order_detail
 from api.db_interface import recipes, resources, roles, sandwiches
 from api.shop.staff.resource_menu import resource_menu
-from api.shop.staff.sandwich_menu import sandwich_menu
+from api.shop.staff.sandwich_menu import sandwich_menu, show_all_sandwiches
+from api.dependencies.database import SessionLocal
 class Shop:
     def __init__(self):
         #If active_user_account remains None, account is guest
@@ -130,25 +135,90 @@ class Shop:
             if option == 0:
                 exit = 1
             elif option == 1:
-                pass
+                show_all_sandwiches()
             elif option == 2:
-                resource_menu()
+                self.place_order()
             elif option == 3:
-                sandwich_menu()
+                pass
             elif option == 4:
                 pass
             elif option == 5:
                 pass
-            elif option == 6:
-                pass
             valid_option_selected = 0
 
     #QUESTION: HOW TO PLACE AN ORDER? I DO NOT WISH TO SIGN UP FOR AN ACCOUNT
-    #TODO: ADD MENU ITEMS TO ORDER TO BE PROCESSED WHEN ORDER IS PLACED, ACCOUNT NOT NEEDED
+    #TODO: ADD ORDER TO DB
     def place_order(self):
-        #order_type() somewhere in here
-        #process_payment() somewhere in here
-        pass
+        with SessionLocal() as db:
+            cart = []
+            placing_order = 1
+            checkout = 0
+            name_accepted = 0
+            order_created = 0
+            while placing_order == 1:
+                while (placing_order == 1 and checkout == 0):
+                    while name_accepted == 0:
+                        customer_name = input("Input name on order (Exit/e to Cancel Order): ")
+                        if customer_name.lower() == "exit" or customer_name.lower() == "e":
+                            placing_order = 0
+                            break
+                        elif customer_name == "":
+                            print("ERROR: Name Cannot be Blank")
+                        else:
+                            name_accepted = 1
+                    if placing_order == 0:
+                        break
+                    if order_created == 0:
+                        description = input("Order Notes (Allergies, Substitutions (Leave Blank to Skip): ")
+                        order_data = {
+                            "customer_name": customer_name,
+                            "description": description
+                        }
+                        order = Order(**order_data)
+                        order_created = 1
+
+                    show_all_sandwiches()
+                    sandwich_id_accepted = 0
+                    while sandwich_id_accepted == 0:
+                        sandwich_id = input("Enter ID of sandwich to order (Exit/e to Cancel Order or Checkout/c to Checkout): ")
+                        if sandwich_id.lower() == "exit" or sandwich_id.lower() == "e":
+                            placing_order = 0
+                            break
+                        elif sandwich_id.lower() == "checkout" or sandwich_id.lower() == "c":
+                            if len(cart) == 0:
+                                print("Cart Empty! Please add items before checking out or type Exit/e to cancel")
+                            else:
+                                checkout = 1
+                                break
+                        try:
+                            sandwich_id = int(sandwich_id)
+                            sandwich_id_accepted = 1
+                        except:
+                            print("Sandwich ID must be an Integer and Exist on Menu")
+                    if checkout == 1 or placing_order == 0:
+                        break
+                    sandwich = sandwiches.get_sandwich_by_id(sandwich_id)
+                    sandwich_amount_accepted = 0
+                    while sandwich_amount_accepted == 0:
+                        sandwich_amount = input(f"Enter Number of {sandwich.sandwich_name}: ")
+                        try:
+                            sandwich_amount = int(sandwich_amount)
+                            sandwich_amount_accepted = 1
+                        except:
+                            print("Sandwich Amount must be an Integer")
+
+                    order_detail_data = {
+                        "order_id": order.id,
+                        "sandwich_id": sandwich_id,
+                        "amount":  sandwich_amount
+                    }
+
+                    order_item = OrderDetail(**order_detail_data)
+                    cart.append(order_item)
+
+                """CHECKOUT"""
+                placing_order = 0
+                print("Finish!")
 
     #QUESTION: HOW DO I PAY FOR ORDER?
     #TODO: AFTER CUSTOMER HAS ADDED DESIRED ITEMS TO ORDER, PROCESS TRANSACTION
@@ -189,4 +259,4 @@ class Shop:
         pass
 
 shop = Shop()
-shop.staff_main_menu()
+shop.customer_menu()
