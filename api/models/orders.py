@@ -11,6 +11,7 @@ class Order(Base):
     customer_name = Column(String(100))
     order_date = Column(DATETIME, nullable=False, default=datetime.utcnow())
     description = Column(String(300))
+    order_type = Column(String(100))
     account_id = mapped_column(Integer, ForeignKey("accounts.id"))
 
     accounts = relationship("Account", back_populates="orders")

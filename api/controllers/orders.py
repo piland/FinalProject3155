@@ -8,7 +8,9 @@ def create(db: Session, request):
     new_item = model.Order(
         customer_name=request.customer_name,
         description=request.description,
-        account_id=request.account_id
+        order_date=request.order_date,
+        account_id=request.account_id,
+        order_type=request.order_type
     )
 
     try:

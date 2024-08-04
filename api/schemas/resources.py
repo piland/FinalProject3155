@@ -6,6 +6,7 @@ from pydantic import BaseModel
 class ResourceBase(BaseModel):
     item: str
     amount: int
+    price: int
 
 
 class ResourceCreate(ResourceBase):
@@ -15,6 +16,7 @@ class ResourceCreate(ResourceBase):
 class ResourceUpdate(BaseModel):
     item: Optional[str] = None
     amount: Optional[int] = None
+    price : Optional[float] = None
 
 
 class Resource(ResourceBase):
