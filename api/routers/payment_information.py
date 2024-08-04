@@ -1,32 +1,32 @@
 from fastapi import APIRouter, Depends, FastAPI, status, Response
 from sqlalchemy.orm import Session
-from ..controllers import reviews as controller
-from ..schemas import reviews as schema
+from ..controllers import payment_information as controller
+from ..schemas import payment_information as schema
 from ..dependencies.database import engine, get_db
 
 router = APIRouter(
-    tags=['Reviews'],
-    prefix="/reviews"
+    tags=['Payment Information'],
+    prefix="/paymentinformation"
 )
 
 
-@router.post("/", response_model=schema.Review)
-def create(request: schema.ReviewCreate, db: Session = Depends(get_db)):
+@router.post("/", response_model=schema.PaymentInformation)
+def create(request: schema.PaymentInformationCreate, db: Session = Depends(get_db)):
     return controller.create(db=db, request=request)
 
 
-@router.get("/", response_model=list[schema.Review])
+@router.get("/", response_model=list[schema.PaymentInformation])
 def read_all(db: Session = Depends(get_db)):
     return controller.read_all(db)
 
 
-@router.get("/{item_id}", response_model=schema.Review)
+@router.get("/{item_id}", response_model=schema.PaymentInformation)
 def read_one(item_id: int, db: Session = Depends(get_db)):
     return controller.read_one(db, item_id=item_id)
 
 
-@router.put("/{item_id}", response_model=schema.Review)
-def update(item_id: int, request: schema.ReviewUpdate, db: Session = Depends(get_db)):
+@router.put("/{item_id}", response_model=schema.PaymentInformation)
+def update(item_id: int, request: schema.PaymentInformationUpdate, db: Session = Depends(get_db)):
     return controller.update(db=db, item_id=item_id, request=request)
 
 
