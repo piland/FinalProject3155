@@ -3,7 +3,7 @@ import requests
 base_url = "http://127.0.0.1:8000"
 
 def create(promo_id, discount, name):
-    url = f"{base_url}/promoCodes/"
+    url = f"{base_url}/promocodes/"
     data = {
         "id": promo_id,
         "discount": discount,
@@ -11,35 +11,35 @@ def create(promo_id, discount, name):
     }
     response = requests.post(url, json = data)
     if response.status_code == 200:
-        print(f"Added promoCode information: {response.json()}")
+        print(f"Added promo_code information: {response.json()}")
         return response.json()
     else:
-        print(f"Failed to Add promoCode information: {response.status_code}")
+        print(f"Failed to Add promo_code information: {response.status_code}")
         return None
 
 
 def read_all():
-    url = f"{base_url}/promoCodes/"
+    url = f"{base_url}/promocodes/"
     response = requests.get(url)
     if response.status_code == 200:
-        print(f"promoCode information: {response.json()}")
+        print(f"promo_code information: {response.json()}")
         return response.json()
     else:
-        print(f"Failed to get promoCode information: {response.status_code}")
+        print(f"Failed to get promo_code information: {response.status_code}")
         return None
 
 def read_one(promo_id):
-    url = f"{base_url}/promoCodes/{promo_id}"
+    url = f"{base_url}/promocodes/{promo_id}"
     response = requests.get(url)
     if response.status_code == 200:
-        print(f"promoCode information: {response.json()}")
+        print(f"promo_code information: {response.json()}")
         return response.json()
     else:
-        print(f"Failed to get promoCode information: {response.status_code}")
+        print(f"Failed to get promo_code information: {response.status_code}")
         return None
 
 def update(promo_id, name, discount):
-    url = f"{base_url}/promoCodes/{promo_id}"
+    url = f"{base_url}/promocodes/{promo_id}"
     new_data = {}
     if discount is not None:
         new_data["discount"] = discount
@@ -49,18 +49,18 @@ def update(promo_id, name, discount):
 
     response = requests.put(url, json = new_data)
     if response == 200:
-        print(f"promoCode info updated: {response.json()}")
+        print(f"promo_code info updated: {response.json()}")
         return response.json()
     else:
-        print(f"Failed to Update promoCode info: {response.status_code}")
+        print(f"Failed to Update promo_code info: {response.status_code}")
         return None
 
 def delete(promo_id):
-    url = f"{base_url}/promoCodes/{promo_id}"
+    url = f"{base_url}/promocodes/{promo_id}"
     response = requests.delete(url)
     if response == 200:
-        print(f"Deleted promoCode information: {response.json()}")
+        print(f"Deleted promo_code information: {response.json()}")
         return response.json()
     else:
-        print(f"Failed to Delete promoCode information: {response.status_code}")
+        print(f"Failed to Delete promo_code information: {response.status_code}")
         return None

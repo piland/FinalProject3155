@@ -1,15 +1,15 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
-from api.models import paymentInformation as model
+from api.models import payment_information as model
 from sqlalchemy.exc import SQLAlchemyError
 
 
 def create(db: Session, request):
     new_item = model.PaymentInformation(
-        balanceOnAccount=request.balanceOnAccount,
-        cardInformation=request.cardInformation,
-        paymentType=request.paymentType,
-        lastTransactionStatus=request.lastTransactionStatus
+        balance_on_account=request.balance_on_account,
+        card_information=request.card_information,
+        payment_type=request.payment_type,
+        last_transaction_status=request.last_transaction_status
     )
 
     try:
