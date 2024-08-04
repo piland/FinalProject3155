@@ -1,9 +1,14 @@
 # api/utils/seeder.py
 from sqlalchemy.orm import Session
+from api.models.accounts import Account
 from api.models.roles import Role
 from api.models.promo_codes import PromoCode
 from api.models.sandwiches import Sandwich
 from api.models.resources import Resource
+from api.models.recipes import Recipe
+from api.models.orders import Order
+from api.models.payment_information import PaymentInformation
+from api.models.order_details import OrderDetail
 from api.dependencies.database import SessionLocal, engine, Base
 
 
@@ -56,9 +61,76 @@ def seed_db():
             ]
             db.add_all(resources)
             db.commit()
+        if db.query(Recipe).count() == 0:
+            recipes = [
+                #RESOURCES #1 = Bread #2 = Ham #3 = Cheese #4 = Tomato #5 = Pickles #6 = Lettuce #7 = Mayo #8 = Onions
+                #ID 1 = Small Ham Sandwich
+                Recipe(sandwich_id=1, resource_id=1, amount=2),
+                Recipe(sandwich_id=1, resource_id=2, amount=2),
+                Recipe(sandwich_id=1, resource_id=3, amount=1),
+                Recipe(sandwich_id=1, resource_id=4, amount=1),
+                Recipe(sandwich_id=1, resource_id=5, amount=1),
+                Recipe(sandwich_id=1, resource_id=6, amount=1),
+                Recipe(sandwich_id=1, resource_id=7, amount=1),
+                Recipe(sandwich_id=1, resource_id=8, amount=1),
+
+                #ID 2 = Regular Ham Sandwich
+                Recipe(sandwich_id=2, resource_id=1, amount=2),
+                Recipe(sandwich_id=2, resource_id=2, amount=4),
+                Recipe(sandwich_id=2, resource_id=3, amount=2),
+                Recipe(sandwich_id=2, resource_id=4, amount=2),
+                Recipe(sandwich_id=2, resource_id=5, amount=2),
+                Recipe(sandwich_id=2, resource_id=6, amount=2),
+                Recipe(sandwich_id=2, resource_id=7, amount=2),
+                Recipe(sandwich_id=2, resource_id=8, amount=2),
+
+                #ID 3 = Large Ham Sandwich
+                Recipe(sandwich_id=3, resource_id=1, amount=4),
+                Recipe(sandwich_id=3, resource_id=2, amount=6),
+                Recipe(sandwich_id=3, resource_id=3, amount=4),
+                Recipe(sandwich_id=3, resource_id=4, amount=4),
+                Recipe(sandwich_id=3, resource_id=5, amount=4),
+                Recipe(sandwich_id=3, resource_id=6, amount=4),
+                Recipe(sandwich_id=3, resource_id=7, amount=4),
+                Recipe(sandwich_id=3, resource_id=8, amount=4),
+
+                #ID 4 = Small Double Ham Sandwich
+                Recipe(sandwich_id=4, resource_id=1, amount=2),
+                Recipe(sandwich_id=4, resource_id=2, amount=4),
+                Recipe(sandwich_id=4, resource_id=3, amount=1),
+                Recipe(sandwich_id=4, resource_id=4, amount=1),
+                Recipe(sandwich_id=4, resource_id=5, amount=1),
+                Recipe(sandwich_id=4, resource_id=6, amount=1),
+                Recipe(sandwich_id=4, resource_id=7, amount=1),
+                Recipe(sandwich_id=4, resource_id=8, amount=1),
+
+                #ID 5 = Regular Double Ham Sandwich
+                Recipe(sandwich_id=5, resource_id=1, amount=2),
+                Recipe(sandwich_id=5, resource_id=2, amount=8),
+                Recipe(sandwich_id=5, resource_id=3, amount=2),
+                Recipe(sandwich_id=5, resource_id=4, amount=2),
+                Recipe(sandwich_id=5, resource_id=5, amount=2),
+                Recipe(sandwich_id=5, resource_id=6, amount=2),
+                Recipe(sandwich_id=5, resource_id=7, amount=2),
+                Recipe(sandwich_id=5, resource_id=8, amount=2),
+
+                #ID 6 = Large Double Ham Sandwich
+                Recipe(sandwich_id=6, resource_id=1, amount=4),
+                Recipe(sandwich_id=6, resource_id=2, amount=12),
+                Recipe(sandwich_id=6, resource_id=3, amount=4),
+                Recipe(sandwich_id=6, resource_id=4, amount=4),
+                Recipe(sandwich_id=6, resource_id=5, amount=4),
+                Recipe(sandwich_id=6, resource_id=6, amount=4),
+                Recipe(sandwich_id=6, resource_id=7, amount=4),
+                Recipe(sandwich_id=6, resource_id=8, amount=4)
+            ]
+        db.add_all(recipes)
+        db.commit()
 
     except Exception as e:
         db.rollback()
         print(f"Error seeding: {e}")
     finally:
         db.close()
+
+seed_db()
