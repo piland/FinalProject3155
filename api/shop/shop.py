@@ -21,7 +21,8 @@ class Shop:
                 print("2. Resources")
                 print("3. Sandwiches")
                 print("4. Recipes")
-                print("5. Promos")
+                print("5. Orders")
+                print("6. Promos")
                 print("0. Shut Down")
 
                 try:
@@ -43,6 +44,8 @@ class Shop:
             elif option == 4:
                 pass
             elif option == 5:
+                pass
+            elif option == 6:
                 pass
             valid_option_selected = 0
 
