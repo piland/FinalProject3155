@@ -8,6 +8,8 @@ class OrderBase(BaseModel):
     customer_name: str
     description: Optional[str] = None
     account_id: Optional[int] = None
+    promo_code_id: Optional[int] = None
+    order_type: Optional[str] = None
 
 
 class OrderCreate(OrderBase):
@@ -18,6 +20,8 @@ class OrderUpdate(BaseModel):
     customer_name: Optional[str] = None
     description: Optional[str] = None
     account_id: Optional[int] = None
+    promo_code_id: Optional[int] = None
+    order_type: Optional[str] = None
 
 
 class Order(OrderBase):
