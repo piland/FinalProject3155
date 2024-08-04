@@ -1,8 +1,9 @@
 from typing import Optional
 from pydantic import BaseModel
 
+
 class PromoCodeBase(BaseModel):
-    id: int
+    pass
 
 
 class PromoCodeCreate(PromoCodeBase):
@@ -11,12 +12,14 @@ class PromoCodeCreate(PromoCodeBase):
 
 
 class PromoCodeUpdate(BaseModel):
-    id: int = None
     discount: Optional[float] = None
-    name: str = None
+    name: Optional[str] = None
 
 
 class PromoCode(PromoCodeBase):
-    discount: Optional[float] = None
-    name: str = None
+    id: int
+    discount: float
+    name: str
 
+    class Config:
+        from_attributes = True
