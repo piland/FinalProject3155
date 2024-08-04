@@ -5,6 +5,7 @@ from api.models.promo_codes import PromoCode
 from api.models.sandwiches import Sandwich
 from api.models.resources import Resource
 from api.dependencies.database import SessionLocal, engine, Base
+from api.models.payment_information import PaymentInformation
 
 
 def seed_db():
@@ -55,6 +56,13 @@ def seed_db():
                 Resource(id=8, item="Onions", amount=50, price=0.25)
             ]
             db.add_all(resources)
+            db.commit()
+        if db.query(PaymentInformation).count() == 0:
+            payments = [
+                PaymentInformation(id=1, balance_on_account=0, card_information="None", payment_type="None",
+                                   last_transaction_status=False)
+            ]
+            db.add_all(payments)
             db.commit()
 
     except Exception as e:
