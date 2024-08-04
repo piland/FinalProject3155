@@ -3,13 +3,14 @@ import requests
 base_url = "http://127.0.0.1:8000"
 
 
-def create(name, age, phone_number, email, password):
+def create(name, age, phone_number, email, role_id, password):
     url = f"{base_url}/accounts/"
     data = {
         "name": name,
         "age": age,
-        "phoneNumber": phone_number,
+        "phone_number": phone_number,
         "email": email,
+        "role_id": role_id,
         "password": password
     }
     response = requests.post(url, json=data)
@@ -43,7 +44,7 @@ def read_one(account_id):
         return None
 
 
-def update(account_id, name=None, age=None, phone_number=None, email=None, password=None):
+def update(account_id, name=None, age=None, phone_number=None, email=None, role_id=None, password=None):
     url = f"{base_url}/accounts/{account_id}"
     new_data = {}
     if name is not None:
@@ -51,9 +52,11 @@ def update(account_id, name=None, age=None, phone_number=None, email=None, passw
     if age is not None:
         new_data["age"] = age
     if phone_number is not None:
-        new_data["phoneNumber"] = phone_number
+        new_data["phone_number"] = phone_number
     if email is not None:
         new_data["email"] = email
+    if role_id is not None:
+        new_data["role_id"] = role_id
     if password is not None:
         new_data["password"] = password
     response = requests.put(url, json=new_data)
