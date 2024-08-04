@@ -15,3 +15,6 @@ class Order(Base):
 
     accounts = relationship('Account', back_populates='order')
     order_details = relationship("OrderDetail", back_populates="order")
+
+    def __repr__(self):
+        return f"ID: {self.id}, CUSTOMER NAME: {self.customer_name}, ORDER DATE: {self.order_date}, DESCRIPTION: {self.description}"

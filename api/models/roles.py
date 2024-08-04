@@ -9,4 +9,7 @@ class Role(Base):
     description = Column(String(250), nullable=False)
     title = Column(String(250), nullable=False)
 
-    accounts = relationship('Account', back_populates='roles')
+    #accounts = relationship('Account', back_populates='roles')
+
+    def __repr__(self):
+        return f"ID: {self.id}, ROLE: {self.title}, DESCRIPTION: {self.description}"
