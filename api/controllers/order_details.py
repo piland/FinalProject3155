@@ -1,9 +1,10 @@
-from datetime import date
+from datetime import date, datetime
 from sqlalchemy import func
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
 from api.models import order_details as model
 from sqlalchemy.exc import SQLAlchemyError
+from typing import List, Optional
 
 
 def create(db: Session, request):
@@ -96,3 +97,16 @@ def get_order_trends(db: Session):
         raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
 
     return trends
+
+def review_order_history(db: Session, start_date: Optional[date] = None, end_date: Optional[date] = None):
+    try:
+        query = db.query(model.OrderDetail)
+        if start_date:
+            query = query.filter(model.OrderDetail.order_date >= start_date)
+        if end_date:
+            query = query.filter(model.OrderDetail.order_date <= end_date)
+        order_history = query.all()
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+    return order_history
