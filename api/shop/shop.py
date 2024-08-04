@@ -1,4 +1,4 @@
-from api.requests import accounts, order_details, orders, paymentInformation, reviews
+from api.requests import accounts, order_details, orders, payment_information, reviews
 from api.db_interface import recipes, resources, roles, sandwiches
 from api.shop.resource_menu import resource_menu
 from api.shop.sandwich_menu import sandwich_menu
