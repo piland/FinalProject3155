@@ -1,6 +1,6 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME
 from sqlalchemy.orm import relationship
-from api.dependencies.database import Base
+from ..dependencies.database import Base
 
 class Account(Base):
     __tablename__ = "accounts"
