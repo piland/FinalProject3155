@@ -3,6 +3,9 @@ from api.models.orders import Order
 from api.controllers.orders import create as create_order
 from api.models.order_details import OrderDetail
 from api.controllers.order_details import create as create_order_detail
+from api.models.payment_information import PaymentInformation
+from api.controllers import payment_information as payment_information_controller
+from api.requests.payment_information import update as payment_information_update
 from api.db_interface import recipes, resources, roles, sandwiches
 from api.shop.staff.resource_menu import resource_menu
 from api.shop.staff.sandwich_menu import sandwich_menu, show_all_sandwiches
@@ -170,6 +173,22 @@ class Shop:
                         break
                     if order_created == 0:
                         description = input("Order Notes (Allergies, Substitutions (Leave Blank to Skip): ")
+
+                        print("===== ORDER TYPES =====")
+                        print("1. Dine-In\n2. Takeout\n3. Delivery")
+                        order_type_accepted = 0
+                        while order_type_accepted == 0:
+                            order_type = input("Enter order type ID: ")
+                            try:
+                                order_type = int(order_type)
+                                if order_type < 1 or order_type > 3:
+                                    print("ERROR: Invalid order type")
+                                else:
+                                    order_type_accepted = 1
+                            except:
+                                print("ERROR: Order type must be a number")
+                        order_type = self.get_order_type(order_type)
+
                         order_data = {
                             "customer_name": customer_name,
                             "description": description
@@ -217,19 +236,63 @@ class Shop:
                     cart.append(order_item)
 
                 """CHECKOUT"""
+                order_total = 0
+                for order_detail in cart:
+                    sandwich_id = order_detail.sandwich_id
+                    price = sandwiches.get_sandwich_by_id(sandwich_id).price
+                    order_total += (price * order_detail.amount)
+
+                payment_information_accepted = 0
+                while payment_information_accepted == 0:
+                    self.show_all_payment_information()
+                    print(f"Your Total is {order_total}")
+                    payment_id = input("Enter Payment Information ID (Exit/e to Cancel Transaction): ")
+                    if payment_id.lower() == "exit" or payment_id.lower() == "e":
+                        placing_order = 0
+                        break
+                    #try:
+                    payment_id = int(payment_id)
+                    selected_payment_information = payment_information_controller.read_one(db, payment_id)
+                    print(f"PAYMENT INFO BALANCE: {selected_payment_information.balance_on_account}")
+                    if selected_payment_information.balance_on_account > order_total:
+                        new_balance = float(selected_payment_information.balance_on_account - order_total)
+                        selected_payment_information.balance_on_account = new_balance
+                        payment_information_update(payment_id, balance_on_account=new_balance)
+                        print(f"PAYMENT ACCEPTED, NEW BALANCE ON ACCOUNT {payment_id}: ${new_balance}")
+                        payment_information_accepted = 1
+                    #except Exception as e:
+                        #print(e)
+                        #print("ERROR: Payment ID must be Integer and Exist in Available Payment Options")
+
+
+                if placing_order == 0:
+                    break
+
+
                 placing_order = 0
                 print("Finish!")
+
+    def show_all_payment_information(self):
+        with SessionLocal() as db:
+            payment_information_list = payment_information_controller.read_all(db)
+            print("===== PAYMENT INFORMATION =====")
+            for payment_info in payment_information_list:
+                print(payment_info)
 
     #QUESTION: HOW DO I PAY FOR ORDER?
     #TODO: AFTER CUSTOMER HAS ADDED DESIRED ITEMS TO ORDER, PROCESS TRANSACTION
     def process_payment(self):
         pass
 
-    #QUESTION: DOES THE SYSTEM SUPPORT DIFFERENT TYPES OF ORDERING
+
     #TODO: THIS FUNCTION WILL ASK FOR INPUT REGARDING TYPE OF ORDER, MAY REMOVE IN FAVOR OF SIMPLER IMPLEMENTATION
-    def order_type(self):
-        #return order_type
-        pass
+    def get_order_type(self, input):
+        type = "Dine-In"
+        if input == 2:
+            type = "Takeout"
+        elif input == 3:
+            type = "Delivery"
+        return type
 
     #QUESTION: HOW CAN I TRACK THE STATUS OF MY ORDER BY MY TRACKING NUMBER?
     #TODO: GET ORDER STATUS FROM TRACKING NUMBER

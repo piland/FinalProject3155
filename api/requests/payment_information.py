@@ -21,7 +21,7 @@ def create(card_information, balance_on_account, payment_type, last_transaction_
 
 
 def read_all():
-    url = f"{base_url}/payment_information/"
+    url = f"{base_url}/paymentinformation/"
     response = requests.get(url)
     if response.status_code == 200:
         print(f"Customer Payment Information: {response.json()}")
@@ -32,7 +32,7 @@ def read_all():
 
 
 def read_one(payment_information_id):
-    url = f"{base_url}/payment_information/{payment_information_id}"
+    url = f"{base_url}/paymentinformation/{payment_information_id}"
     response = requests.get(url)
     if response.status_code == 200:
         print(f"Customer Payment Information: {response.json()}")
@@ -44,7 +44,7 @@ def read_one(payment_information_id):
 
 def update(payment_information_id, card_information=None, balance_on_account=None, payment_type=None,
            last_transaction_status=None):
-    url = f"{base_url}/payment_information/{payment_information_id}"
+    url = f"{base_url}/paymentinformation/{payment_information_id}"
     new_data = {}
     if card_information is not None:
         new_data["card_information"] = card_information
@@ -64,7 +64,7 @@ def update(payment_information_id, card_information=None, balance_on_account=Non
 
 
 def delete(payment_information_id):
-    url = f"{base_url}/payment_information/{payment_information_id}"
+    url = f"{base_url}/paymentinformation/{payment_information_id}"
     response = requests.delete(url)
     if response == 200:
         print(f"Deleted Payment Information: {response.json()}")
