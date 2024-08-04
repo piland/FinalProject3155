@@ -3,6 +3,8 @@ from sqlalchemy.orm import Session
 from ..controllers import order_details as controller
 from ..schemas import order_details as schema
 from ..dependencies.database import engine, get_db
+from datetime import date, datetime
+from typing import List, Optional
 
 router = APIRouter(
     tags=['Order Details'],
@@ -33,3 +35,15 @@ def update(item_id: int, request: schema.OrderDetailUpdate, db: Session = Depend
 @router.delete("/{item_id}")
 def delete(item_id: int, db: Session = Depends(get_db)):
     return controller.delete(db=db, item_id=item_id)
+
+@router.get("/order-trends")
+def order_trends(db: Session = Depends(get_db)):
+    return controller.get_order_trends(db)
+
+@router.get("/order-history")
+def order_history(
+    start_date: Optional[date] = None,
+    end_date: Optional[date] = None,
+    db: Session = Depends(get_db)
+):
+    return controller.review_order_history(db, start_date, end_date)

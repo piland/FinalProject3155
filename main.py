@@ -21,6 +21,5 @@ app.add_middleware(
 model_loader.index()
 index_router.load_routes(app)
 
-
 if __name__ == "__main__":
     uvicorn.run(app, host=conf.app_host, port=conf.app_port)
