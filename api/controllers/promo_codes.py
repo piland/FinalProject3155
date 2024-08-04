@@ -1,6 +1,6 @@
 from sqlalchemy.orm import Session
 from fastapi import HTTPException, status, Response, Depends
-from ..models import promoCodes as model
+from ..models import promo_codes as model
 from sqlalchemy.exc import SQLAlchemyError
 
 
