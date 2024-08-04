@@ -1,6 +1,7 @@
-from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME, BOOLEAN
+from sqlalchemy import Column, Integer, String, DECIMAL, BOOLEAN
 from sqlalchemy.orm import relationship
 from api.dependencies.database import Base
+
 
 class PaymentInformation(Base):
     __tablename__ = 'payment_information'

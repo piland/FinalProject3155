@@ -3,24 +3,28 @@ from typing import Optional
 from pydantic import BaseModel
 from .sandwiches import Sandwich
 
+
 class PaymentInformationBase(BaseModel):
-    balanceOnAccount: Optional[float]
-    lastTransactionStatus: Optional[bool]
+    balance_on_account: Optional[float]
+    last_transaction_status: Optional[bool]
+
 
 class PaymentInformationCreate(PaymentInformationBase):
-    cardInformation: str
-    paymentType: str
+    card_information: str
+    payment_type: str
+
 
 class PaymentInformationUpdate(BaseModel):
-    cardInformation: Optional[str] = None
-    balanceOnAccount: Optional[float] = None
-    paymentType: Optional[str] = None
-    lastTransactionStatus: Optional[bool] = None
+    card_information: Optional[str] = None
+    balance_on_account: Optional[float] = None
+    payment_type: Optional[str] = None
+    last_transaction_status: Optional[bool] = None
+
 
 class PaymentInformation(PaymentInformationBase):
     id: int
-    cardInformation: str
-    paymentType: str
+    card_information: str
+    payment_type: str
 
     class Config:
         from_attributes = True

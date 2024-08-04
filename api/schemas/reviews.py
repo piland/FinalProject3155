@@ -1,30 +1,23 @@
-from datetime import datetime
-from typing import Optional
 from pydantic import BaseModel
-from .sandwiches import Sandwich
-
+from typing import Optional
 
 
 class ReviewBase(BaseModel):
-    pass
+    stars: int
+    description: str
 
 
 class ReviewCreate(ReviewBase):
-    stars: int
-    description: str
     account_id: int
 
 
-class ReviewUpdate(BaseModel):
-    stars: Optional[int] = None
-    description: Optional[str] = None
+class ReviewUpdate(ReviewBase):
     account_id: Optional[int] = None
-
+    description: Optional[str] = None
+    stars: Optional[int] = None
 
 class Review(ReviewBase):
     id: int
-    stars: int
-    description: str
     account_id: int
 
     class Config:
