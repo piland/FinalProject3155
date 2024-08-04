@@ -1,7 +1,7 @@
 from api.requests import accounts, order_details, orders, payment_information, reviews
 from api.db_interface import recipes, resources, roles, sandwiches
-from api.shop.resource_menu import resource_menu
-from api.shop.sandwich_menu import sandwich_menu
+from api.shop.staff.resource_menu import resource_menu
+from api.shop.staff.sandwich_menu import sandwich_menu
 class Shop:
     def __init__(self):
         #If active_user_account remains None, account is guest
@@ -16,7 +16,7 @@ class Shop:
         while exit != 1:
             while valid_option_selected != 1:
                 option = -1
-                print("======= BACK OF HOUSE OPTIONS ========")
+                print("\n======= BACK OF HOUSE OPTIONS ========")
                 print("1. Reports")
                 print("2. Resources")
                 print("3. Sandwiches")
@@ -106,7 +106,42 @@ class Shop:
     """CUSTOMER FUNCTIONS"""
     """========================================================"""
     def customer_menu(self):
-        pass
+        exit = 0
+        valid_option_selected = 0
+        while exit != 1:
+            while valid_option_selected != 1:
+                option = -1
+                print("\n======= WELCOME TO JETHANASI'S! ========")
+                print("1. View Menu")
+                print("2. Place Order")
+                print("3. Check Order Status")
+                print("4. Write Review")
+                print("5. See Reviews")
+                print("0. Exit")
+
+                try:
+                    option = int(input("\nEnter One of the Options Above: "))
+                    if option > -1 and option < 6:
+                        valid_option_selected = 1
+                except:
+                    print("Invalid Option")
+
+            # TODO: Reports, Recipes, Promos, the rest of Resources and Sandwiches
+            if option == 0:
+                exit = 1
+            elif option == 1:
+                pass
+            elif option == 2:
+                resource_menu()
+            elif option == 3:
+                sandwich_menu()
+            elif option == 4:
+                pass
+            elif option == 5:
+                pass
+            elif option == 6:
+                pass
+            valid_option_selected = 0
 
     #QUESTION: HOW TO PLACE AN ORDER? I DO NOT WISH TO SIGN UP FOR AN ACCOUNT
     #TODO: ADD MENU ITEMS TO ORDER TO BE PROCESSED WHEN ORDER IS PLACED, ACCOUNT NOT NEEDED
