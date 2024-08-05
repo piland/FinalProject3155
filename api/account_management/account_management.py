@@ -21,7 +21,8 @@ class AccountManagement:
             print("1. Login")
             print("2. Signup")
             print("3. Continue as Guest")
-            print("4. Exit")
+            print("4. Update Payment Information")
+            print("5. Exit")
             option = input("Please enter the number you would like to do: ")
 
             if option.isdigit() and int(option) in range(1, 5):
@@ -36,6 +37,9 @@ class AccountManagement:
                     case 3:
                         return self.guest_login()
                     case 4:
+                        account_id = self.handle_update_payment_information()
+                        return account_id
+                    case 5:
                         exit()
             else:
                 print("Invalid option. Please try again.")
@@ -57,6 +61,43 @@ class AccountManagement:
         else:
             print("No account found with this email. Please try again.")
         return None
+
+    def handle_update_payment_information(self):
+        print("Please log in before updating payment information")
+        account_id = self.login()
+        if account_id:
+            print("Thank you, please update your payment information")
+            payment_information = self.get_payment_information(account_id)
+            if payment_information:
+                payment_information_id = payment_information.get("id")
+                balance = input("What is your new balance? ")
+                card_info = input("What is your new card number? ")
+                payment_type = input("What is your new payment type? ")
+                self.update_payment_information(payment_information_id, balance, card_info, payment_type)
+        return account_id
+
+    def get_payment_information(self, account_id):
+        response = api.requests.accounts.read_one(account_id)
+        if response:
+            payment_information_id = response.get("payment_information_id")
+            if payment_information_id:
+                return api.requests.payment_information.read_one(payment_information_id)
+        print("No payment information found for this account.")
+        return None
+
+    def update_payment_information(self, payment_information_id, balance, card_info, payment_type):
+        response = api.requests.payment_information.update(
+            payment_information_id=payment_information_id,
+            balance_on_account=balance,
+            card_information=card_info,
+            payment_type=payment_type
+        )
+        if response:
+            print(f"Payment Information Updated Successfully: {response}")
+            return response
+        else:
+            print("Failed to Update Payment Information")
+            return None
 
     def register_account(self):
         name = input("What is your name? ")
@@ -116,20 +157,6 @@ class AccountManagement:
 
     def create_payment_information(self, balance, card_info, payment_type):
         response = api.requests.payment_information.create(
-            balance_on_account=balance,
-            card_information=card_info,
-            payment_type=payment_type
-        )
-        if response:
-            print(f"Payment Information Created Successfully: {response}")
-            return response
-        else:
-            print("Failed to Create Payment Information")
-            return None
-
-    def update_payment_information(self, payment_information_id, balance, card_info, payment_type):
-        response = api.requests.payment_information.update(
-            payment_information_id=payment_information_id,
             balance_on_account=balance,
             card_information=card_info,
             payment_type=payment_type
