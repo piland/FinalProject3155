@@ -1,6 +1,7 @@
 from api.dependencies.database import SessionLocal
 from api.models.sandwiches import Sandwich
 from api.models.order_details import OrderDetail
+from api.models.orders import Order
 
 def report_menu():
     exit = 0
@@ -32,7 +33,7 @@ def report_menu():
         elif option == 2:
             pass
         elif option == 3:
-            pass
+            show_order_details()
         elif option == 4:
             show_unpopular_orders()
         elif option == 5:
@@ -51,11 +52,29 @@ def is_enough_ingredients():
 #QUESTION: HOW CAN I VIEW THE LIST OF ALL ORDERS? IS THERE AN OPTION TO VIEW THE DETAILS OF A SPECIFIC ORDER?
 #TODO: VIEW ALL ORDERS
 def show_all_orders():
-    pass
+    with SessionLocal() as db:
+        order_list = db.query(Order).all()
+        print("===== ALL ORDERS =====")
+        for order_item in order_list:
+            print(order_item)
 
-#TODO: VIEW SINGLE ORDER DETAILS
+#TODO: VIEW ORDER DETAILS
 def show_order_details():
-    pass
+    with SessionLocal() as db:
+        show_all_orders()
+        order_id_accepted = 0
+        while order_id_accepted == 0:
+            order_id = input("Enter ID of Order to Get Details: ")
+            try:
+                order_id = int(order_id)
+                order_detail_list = db.query(OrderDetail).filter(OrderDetail.order_id == order_id).all()
+                order_id_accepted = 1
+            except:
+                print("Order ID must be Integer and Exist in Orders")
+        print(f"===== ORDER ID {order_id} DETAILS =====")
+        for order_detail_item in order_detail_list:
+            sandwich_name = db.query(Sandwich).filter(order_detail_item.sandwich_id == Sandwich.id).first().sandwich_name
+            print(f"ID: {order_detail_item.id}, ORDER_ID: {order_id}, SANDWICH: {sandwich_name}, AMOUNT: {order_detail_item.amount}")
 
 #QUESTION: HOW CAN I IDENTIFY DISHES THAT ARE LESS POPULAR OR HAVE RECEIVED COMPLAINTS? IS THERE A WAY TO UNDERSTAND CUSTOMER DISATISFACTION?
 #TODO: VIEW UNPOPULAR ORDERS (Im just gonna show all sandwiches in descending order based on sales)
