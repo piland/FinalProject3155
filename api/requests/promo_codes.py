@@ -43,7 +43,7 @@ def show_all_promo_codes():
     promo_dicts = read_all()
     print("===== PROMO CODES =====")
     for promo_dict in promo_dicts:
-        print(f"CODE: {promo_dict["name"]}, DISCOUNT: {promo_dict["discount"]}")
+        print(f"ID: {promo_dict["id"]}, CODE: {promo_dict["name"]}, DISCOUNT: {promo_dict["discount"]}")
 
 def update(promo_id, name, discount):
     url = f"{base_url}/promocodes/{promo_id}"
