@@ -9,6 +9,7 @@ class ReviewBase(BaseModel):
 
 class ReviewCreate(ReviewBase):
     account_id: int
+    sandwich_id: int
 
 
 class ReviewUpdate(ReviewBase):
@@ -19,6 +20,7 @@ class ReviewUpdate(ReviewBase):
 class Review(ReviewBase):
     id: int
     account_id: int
+    sandwich_id: int
 
     class Config:
         from_attributes = True

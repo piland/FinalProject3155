@@ -14,6 +14,7 @@ class Sandwich(Base):
 
     recipes = relationship("Recipe", back_populates="sandwich")
     order_details = relationship("OrderDetail", back_populates="sandwich")
+    reviews = relationship("Review", back_populates="sandwich")
 
     def __repr__(self):
         return f"ID: {self.id}, SANDWICH NAME: {self.sandwich_name}, PRICE: {self.price}"

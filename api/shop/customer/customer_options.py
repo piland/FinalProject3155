@@ -197,7 +197,11 @@ def check_order():
                 order_id_accepted = 1
             except:
                 print("ERROR: Order ID must be Integer and Exist in Order Table")
-        print(f"ORDER ID: {order_id} STATUS: #NEED ORDER STATUS")
+        if order_item.order_status == False:
+            order_status = "IN PROGRESS"
+        else:
+            order_status = "COMPLETE"
+        print(f"\n======= ORDER ID #{order_id} STATUS: {order_status} =======")
 
 def get_filtered_menu():
     with SessionLocal() as db:
@@ -264,7 +268,10 @@ def get_reviews_for_single_item():
     pass
 
 def get_menu_with_reviews():
-    pass
+    with SessionLocal() as db:
+        sandwiches = db.query(Sandwich).all()
+        reviews = db.query(Review).all()
+
 
 def apply_promo_code(order_total, promo_code):
     with SessionLocal() as db:
