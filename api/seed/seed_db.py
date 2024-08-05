@@ -61,6 +61,19 @@ def seed_db():
             ]
             db.add_all(resources)
             db.commit()
+        if db.query(PaymentInformation).count() == 0:
+            payments = [
+                PaymentInformation(id=1, balance_on_account=0, card_information="None", payment_type="None")
+            ]
+            db.add_all(payments)
+            db.commit()
+        if db.query(Account).count() == 0:
+            accounts = [
+                Account(id=1, name="Guest", email="<EMAIL>", password="<PASSWORD>", age=0, phone_number="01234567890",
+                        role_id=1, payment_information_id=1)
+            ]
+            db.add_all(accounts)
+            db.commit()
         if db.query(Recipe).count() == 0:
             recipes = [
                 #RESOURCES #1 = Bread #2 = Ham #3 = Cheese #4 = Tomato #5 = Pickles #6 = Lettuce #7 = Mayo #8 = Onions

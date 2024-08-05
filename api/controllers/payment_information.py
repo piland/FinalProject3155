@@ -9,7 +9,6 @@ def create(db: Session, request):
         balance_on_account=request.balance_on_account,
         card_information=request.card_information,
         payment_type=request.payment_type,
-        last_transaction_status=request.last_transaction_status
     )
 
     try:
