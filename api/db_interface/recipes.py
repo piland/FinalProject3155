@@ -14,7 +14,7 @@ def get_recipe_by_id(recipe_id: int):
     with SessionLocal() as db:
         return db.query(Recipe).filter(Recipe.id == recipe_id).first()
 
-def update_recipe(recipe_id: int, sandwich_id: int = None, resource_id: int = None):
+def update_recipe(recipe_id: int, sandwich_id: int = None, resource_id: int = None, amount: float = None):
     with SessionLocal() as db:
         recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
         if recipe:
@@ -22,6 +22,8 @@ def update_recipe(recipe_id: int, sandwich_id: int = None, resource_id: int = No
                 recipe.sandwich_id = sandwich_id
             if resource_id:
                 recipe.resource_id = resource_id
+            if amount:
+                recipe.amount = amount
             db.commit()
             return recipe
         return None
