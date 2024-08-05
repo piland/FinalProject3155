@@ -28,10 +28,11 @@ class AccountManagement:
                 option = int(option)
                 match option:
                     case 1:
-                        return self.login()
+                        account_id = self.login()
+                        return account_id
                     case 2:
-                        self.register_account()
-                        break
+                        account_id = self.register_account()
+                        return account_id
                     case 3:
                         return self.guest_login()
                     case 4:
@@ -50,10 +51,12 @@ class AccountManagement:
             account_id = response.get("id")
             if response.get("password") == password:
                 print(f"Welcome back, {response['name']}")
+                return account_id
             else:
                 print("Invalid password. Please try again.")
         else:
             print("No account found with this email. Please try again.")
+        return None
 
     def register_account(self):
         name = input("What is your name? ")
@@ -100,9 +103,12 @@ class AccountManagement:
         )
 
         if response:
+            account_id = response.get("id")
             print(f"Account Created Successfully: {response}")
+            return account_id
         else:
             print("Failed to Create Account")
+        return None
 
     def guest_login(self):
         print("Continuing as Guest.")
