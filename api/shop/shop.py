@@ -1,13 +1,12 @@
 from api.shop.staff.resource_menu import resource_menu
 from api.shop.staff.sandwich_menu import sandwich_menu
 from api.shop.staff.report_menu import report_menu
+from api.shop.staff.promo_menu import promo_menu
 from api.shop.customer import customer_options
 
 class Shop:
     def __init__(self):
-        #If active_user_account remains None, account is guest
-        self.active_user_account = None
-        self.is_staff = False
+        pass
 
     """========== STAFF MENU ============"""
     """=================================="""
@@ -28,7 +27,7 @@ class Shop:
 
                 try:
                     option = int(input("\nEnter One of the Options Above: "))
-                    if option > -1 and option < 6:
+                    if option > -1 and option < 7:
                         valid_option_selected = 1
                 except:
                     print("Invalid Option")
@@ -47,7 +46,7 @@ class Shop:
             elif option == 5:
                 pass
             elif option == 6:
-                pass
+                promo_menu()
             valid_option_selected = 0
 
     def customer_menu(self):
@@ -87,4 +86,4 @@ class Shop:
             valid_option_selected = 0
 
 shop = Shop()
-shop.customer_menu()
+shop.staff_menu()

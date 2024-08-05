@@ -3,6 +3,11 @@ from api.models.sandwiches import Sandwich
 from api.models.order_details import OrderDetail
 from api.models.orders import Order
 
+from api.requests import orders as orders_request, order_details as order_detail_request
+
+from sqlalchemy import func
+from datetime import datetime
+
 def report_menu():
     exit = 0
     valid_option_selected = 0
@@ -105,11 +110,28 @@ def show_low_rated_orders_details():
 #QUESTION: HOW CAN I DETERMINE THE TOTAL REVENUE GENERATED FROM FOOD SALES ON ANY GIVEN DAY?
 #TODO: SHOW TOTAL REVENUE
 def show_revenue_on_date():
-    pass
-    #TODO: sum orders totals on date
+    with SessionLocal() as db:
+        date_accepted = 0
+        while date_accepted == 0:
+            date = input("Enter Date (MM-DD-YYYY): ")
+            try:
+                date_format = "%m-%d-%Y"
+                date_object = datetime.strptime(date, date_format)
+                date_accepted = 1
+            except:
+                print("ERROR: Date Must be In Format (MM-DD-YYYY)")
+        orders_on_date = db.query(Order).filter(date_object == func.date(Order.order_date)).all()
+        total = 0
+        for order_item in orders_on_date:
+            for order_detail_item in order_item.order_details:
+                sandwich = db.query(Sandwich).filter(order_detail_item.sandwich_id == Sandwich.id).first()
+                total += sandwich.price * order_detail_item.amount
+        print(f"\n===============\nTOTAL REVENUE FOR {date_object}: ${total}\n===============")
 
 #QUESTION: IS THERE A WAY TO VIEW THE LIST OF ORDERS WITHIN A SPECIFIC DATE RANGE?
 #TODO: LIST OF ORDER IN DATE RANGE
 def show_orders_between_dates():
     pass
     #TODO: filter order_list to show only between start_date and end_date
+
+show_revenue_on_date()
