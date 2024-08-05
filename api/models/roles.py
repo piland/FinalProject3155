@@ -1,9 +1,7 @@
 from typing import List
-
 from sqlalchemy import Column, Integer, String
 from sqlalchemy.orm import relationship, Mapped, mapped_column
 from api.dependencies.database import Base
-
 
 class Role(Base):
     __tablename__ = 'roles'

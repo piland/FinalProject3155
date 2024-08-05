@@ -1,6 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME
 from sqlalchemy.orm import relationship
 from ..dependencies.database import Base
+from api.models.orders import Order
 
 class OrderDetail(Base):
     __tablename__ = "order_details"

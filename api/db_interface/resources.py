@@ -19,6 +19,14 @@ def get_all_resources():
         resource_list = db.query(Resource).all()
         return resource_list
 
+def get_current_resource_dict():
+    with SessionLocal() as db:
+        resources = db.query(Resource).all()
+        resource_dict = {}
+        for resource_item in resources:
+            resource_dict[f"{resource_item.id}"] = resource_item.amount
+        return resource_dict
+
 def update_resource(resource_id: int, item: str = None, amount: int = None):
     with SessionLocal() as db:
         resource = db.query(Resource).filter(Resource.id == resource_id).first()

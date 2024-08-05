@@ -4,11 +4,12 @@ from api.controllers.orders import create as create_order
 from api.models.order_details import OrderDetail
 from api.controllers.order_details import create as create_order_detail
 from api.models.payment_information import PaymentInformation
-from api.controllers import payment_information as payment_information_controller
+from api.controllers import payment_information as payment_information_controller, orders as order_controller, order_details as order_detail_controller
 from api.requests.payment_information import update as payment_information_update
 from api.db_interface import recipes, resources, roles, sandwiches
-from api.shop.staff.resource_menu import resource_menu
+from api.shop.staff.resource_menu import resource_menu, show_all_resources
 from api.shop.staff.sandwich_menu import sandwich_menu, show_all_sandwiches
+from api.db_interface import recipes as recipes_db, resources as resources_db
 from api.dependencies.database import SessionLocal
 class Shop:
     def __init__(self):
@@ -150,7 +151,7 @@ class Shop:
             valid_option_selected = 0
 
     #QUESTION: HOW TO PLACE AN ORDER? I DO NOT WISH TO SIGN UP FOR AN ACCOUNT
-    #TODO: ADD ORDER TO DB
+    #TODO: ALERT WHEN ORDER CANNOT BE PROCESSED WHEN TRYING TO ORDER INSTEAD OF THE END
     def place_order(self):
         with SessionLocal() as db:
             cart = []
@@ -191,7 +192,9 @@ class Shop:
 
                         order_data = {
                             "customer_name": customer_name,
-                            "description": description
+                            "description": description,
+                            "account_id": 1,
+                            "order_type": order_type
                         }
                         order = Order(**order_data)
                         order_created = 1
@@ -250,25 +253,48 @@ class Shop:
                     if payment_id.lower() == "exit" or payment_id.lower() == "e":
                         placing_order = 0
                         break
-                    #try:
-                    payment_id = int(payment_id)
-                    selected_payment_information = payment_information_controller.read_one(db, payment_id)
-                    print(f"PAYMENT INFO BALANCE: {selected_payment_information.balance_on_account}")
-                    if selected_payment_information.balance_on_account > order_total:
-                        new_balance = float(selected_payment_information.balance_on_account - order_total)
-                        selected_payment_information.balance_on_account = new_balance
-                        payment_information_update(payment_id, balance_on_account=new_balance)
-                        print(f"PAYMENT ACCEPTED, NEW BALANCE ON ACCOUNT {payment_id}: ${new_balance}")
-                        payment_information_accepted = 1
-                    #except Exception as e:
-                        #print(e)
-                        #print("ERROR: Payment ID must be Integer and Exist in Available Payment Options")
-
-
+                    try:
+                        payment_id = int(payment_id)
+                        selected_payment_information = payment_information_controller.read_one(db, payment_id)
+                        print(f"PAYMENT INFO BALANCE: {selected_payment_information.balance_on_account}")
+                        if selected_payment_information.balance_on_account > order_total:
+                            new_balance = float(selected_payment_information.balance_on_account) - float(order_total)
+                            selected_payment_information.balance_on_account = new_balance
+                            payment_information_update(payment_id, balance_on_account=new_balance)
+                            print(f"PAYMENT ACCEPTED, NEW BALANCE ON ACCOUNT {payment_id}: ${new_balance}")
+                            payment_information_accepted = 1
+                    except Exception as e:
+                        print(e)
+                        print("ERROR: Payment ID must be Integer and Exist in Available Payment Options")
+                total_recipe_dict = {}
+                for item in cart:
+                    recipe_dict = recipes_db.get_recipe_dict(item.sandwich_id)
+                    multiplied_recipe_dict = {key: value * item.amount for key, value in recipe_dict.items()}
+                    if not total_recipe_dict:
+                        total_recipe_dict = multiplied_recipe_dict
+                    else:
+                        for key, value in multiplied_recipe_dict.items():
+                            if key in total_recipe_dict:
+                                total_recipe_dict[key] += value
+                            else:
+                                total_recipe_dict[key] = value
+                resource_dict = resources_db.get_current_resource_dict()
+                new_resource_dict = {key: resource_dict[key] - total_recipe_dict.get(key, 0) for key in resource_dict}
+                has_negative_values = any(value < 0 for value in new_resource_dict.values())
+                if has_negative_values:
+                    print("Not Enough Resources to Process Order!")
+                else:
+                    for key, value in new_resource_dict.items():
+                        resources_db.update_resource(key, amount = value)
+                print("FOR TESTING PLEASE REMOVE LATER")
+                print("NEW RESOURCE LIST")
+                show_all_resources()
                 if placing_order == 0:
                     break
-
-
+                created_order = order_controller.create(db, order)
+                for order_detail_item in cart:
+                    order_detail_item.order_id = created_order.id
+                    order_detail_controller.create(db, order_detail_item)
                 placing_order = 0
                 print("Finish!")
 
@@ -283,7 +309,6 @@ class Shop:
     #TODO: AFTER CUSTOMER HAS ADDED DESIRED ITEMS TO ORDER, PROCESS TRANSACTION
     def process_payment(self):
         pass
-
 
     #TODO: THIS FUNCTION WILL ASK FOR INPUT REGARDING TYPE OF ORDER, MAY REMOVE IN FAVOR OF SIMPLER IMPLEMENTATION
     def get_order_type(self, input):

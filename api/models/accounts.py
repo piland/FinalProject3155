@@ -1,6 +1,9 @@
 from sqlalchemy import Column, ForeignKey, Integer, String
 from sqlalchemy.orm import relationship, mapped_column
 from api.dependencies.database import Base
+from api.models.payment_information import PaymentInformation
+from api.models.roles import Role
+from api.models.reviews import Review
 
 class Account(Base):
     __tablename__ = "accounts"

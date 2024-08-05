@@ -1,6 +1,7 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME
 from sqlalchemy.orm import relationship
 from ..dependencies.database import Base
+from api.models.order_details import OrderDetail
 
 
 class Sandwich(Base):

@@ -1,6 +1,8 @@
 from sqlalchemy import Column, ForeignKey, Integer, String, DECIMAL, DATETIME
 from sqlalchemy.orm import relationship
 from ..dependencies.database import Base
+from api.models.sandwiches import Sandwich
+from api.models.resources import Resource
 
 
 class Recipe(Base):

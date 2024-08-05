@@ -26,6 +26,14 @@ def update_recipe(recipe_id: int, sandwich_id: int = None, resource_id: int = No
             return recipe
         return None
 
+def get_recipe_dict(sandwich_id):
+    with SessionLocal() as db:
+        recipe = db.query(Recipe).filter(Recipe.sandwich_id == sandwich_id).all()
+        recipe_dict = {}
+        for recipe_item in recipe:
+            recipe_dict[f"{recipe_item.resource_id}"] = recipe_item.amount
+        return recipe_dict
+
 def delete_recipe(recipe_id: int):
     with SessionLocal() as db:
         recipe = db.query(Recipe).filter(Recipe.id == recipe_id).first()
@@ -34,3 +42,5 @@ def delete_recipe(recipe_id: int):
             db.commit()
             return True
         return False
+
+print(get_recipe_dict(1))

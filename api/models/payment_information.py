@@ -13,3 +13,6 @@ class PaymentInformation(Base):
     last_transaction_status = Column(BOOLEAN, nullable=True)
 
     accounts = relationship('Account', back_populates='payment_information')
+
+    def __repr__(self):
+        return f"ID: {self.id}, Balance: {self.balance_on_account}, Type: {self.payment_type}"
