@@ -55,7 +55,7 @@ def update(payment_information_id, card_information=None, balance_on_account=Non
         print(f"Payment Info Updated: {response.json()}")
         return response.json()
     else:
-        print(f"Failed to Update Payment Info: {response.status_code}")
+        #print(f"Failed to Update Payment Info: {response.status_code}")
         return None
 
 

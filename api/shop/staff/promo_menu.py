@@ -1,4 +1,7 @@
-def recipe_menu():
+from api.models.promo_codes import PromoCode
+from api.requests import promo_codes as promo_code_request
+
+def promo_menu():
     exit = 0
     valid_option_selected = 0
     while exit != 1:
@@ -8,6 +11,7 @@ def recipe_menu():
             print("1. Create Promo Code")
             print("2. Modify Promo Code")
             print("3. Delete Promo Code")
+            print("4. Show Active Promo Codes")
             print("0. Exit to Main Menu")
 
             try:
@@ -20,18 +24,56 @@ def recipe_menu():
         if option == 0:
             exit = 1
         elif option == 1:
+            create_promo_code()
+        elif option == 2:
             pass
+        elif option == 3:
+            pass
+        elif option == 4:
+            promo_code_request.show_all_promo_codes()
         valid_option_selected = 0
 
 #QUESTION: CAN I CREATE AND MANAGE PROMOTIONAL CODES, INCLUDING SETTING EXPIRATION DATES?
 #TODO: CREATE PROMO CODES, ADD PROMO API
 def create_promo_code():
-    pass
+    creating_promo_code = 1
+    while creating_promo_code == 1:
+        name_accepted = 0
+        while name_accepted == 0:
+            name = input("Enter Name of New Promo Code (Exit/e to Cancel): ")
+            if name.lower() == "exit" or name.lower() == "e":
+                creating_promo_code = 0
+                break
+            elif name.replace(" ", "") == "":
+                print("ERROR: Name cannot be blank")
+            else:
+                name_accepted = 1
+        discount_accepted = 0
+        if creating_promo_code == 1:
+            while discount_accepted == 0:
+                discount = input("Enter Discount %: ")
+                if discount.replace(" ", "") == "":
+                    print("ERROR: Discount cannot be blank")
+                elif "." in discount:
+                    try:
+                        discount = float(discount)
+                        promo_code_request.create(name, discount)
+                        discount_accepted = 1
+                    except:
+                        print("ERROR: Invalid Input")
+                else:
+                    try:
+                        discount = "."+discount
+                        discount = float(discount)
+                        promo_code_request.create(name, discount)
+                        discount_accepted = 1
+                    except:
+                        print("ERROR: Invalid Input")
 
-#TODO: SHOW ALL ACTIVE PROMO CODES
-def show_active_promo_codes():
-    pass
 
 #TODO: DELETE PROMO CODE
 def delete_promo_code():
+    pass
+
+def modify_promo_code():
     pass

@@ -5,7 +5,7 @@ from api.models.promo_codes import PromoCode
 from api.models.sandwiches import Sandwich
 from api.models.resources import Resource
 from api.models.recipes import Recipe
-from api.models.accounts import  Account
+from api.models.accounts import Account
 from api.models.orders import Order
 from api.models.payment_information import PaymentInformation
 from api.models.order_details import OrderDetail
@@ -32,8 +32,8 @@ def seed_db():
             db.commit()
         if db.query(PromoCode).count() == 0:
             promo_codes = [
-                PromoCode(id=1, name="GRANDOPENING", discount=0.80),
-                PromoCode(id=2, name="ILOVEHAMSANDWICHES", discount=0.01)
+                PromoCode(name="GRANDOPENING", discount=0.80),
+                PromoCode(name="ILOVEHAMSANDWICHES", discount=0.01)
             ]
             db.add_all(promo_codes)
             db.commit()
@@ -52,20 +52,20 @@ def seed_db():
             db.commit()
         if db.query(Resource).count() == 0:
             resources = [
-                Resource(id=1, item="Bread", amount=50, price=0.25),
-                Resource(id=2, item="Ham", amount=50, price=0.75),
-                Resource(id=3, item="Cheese", amount=50, price=0.25),
-                Resource(id=4, item="Tomato", amount=50, price=0.50),
-                Resource(id=5, item="Pickles", amount=50, price=0.15),
-                Resource(id=6, item="Lettuce", amount=50, price=0.25),
-                Resource(id=7, item="Mayo", amount=50, price=0.75),
-                Resource(id=8, item="Onions", amount=50, price=0.25)
+                Resource(id=1, item="Bread", amount=500, price=0.25),
+                Resource(id=2, item="Ham", amount=500, price=0.75),
+                Resource(id=3, item="Cheese", amount=500, price=0.25),
+                Resource(id=4, item="Tomato", amount=500, price=0.50),
+                Resource(id=5, item="Pickles", amount=500, price=0.15),
+                Resource(id=6, item="Lettuce", amount=500, price=0.25),
+                Resource(id=7, item="Mayo", amount=500, price=0.75),
+                Resource(id=8, item="Onions", amount=500, price=0.25)
             ]
             db.add_all(resources)
             db.commit()
         if db.query(PaymentInformation).count() == 0:
             payments = [
-                PaymentInformation(id=1, balance_on_account=0, card_information="None", payment_type="None")
+                PaymentInformation(id=1, balance_on_account=100000000, card_information="None", payment_type="None")
             ]
             db.add_all(payments)
             db.commit()
@@ -149,17 +149,17 @@ def seed_db():
                 Recipe(sandwich_id=7, resource_id=8, amount=2),
 
                 # ID 8 = Spicy Ham Sandwich
-                Recipe(sandwich_id=2, resource_id=1, amount=2),
-                Recipe(sandwich_id=2, resource_id=2, amount=4),
-                Recipe(sandwich_id=2, resource_id=3, amount=2),
-                Recipe(sandwich_id=2, resource_id=4, amount=2),
-                Recipe(sandwich_id=2, resource_id=5, amount=4),
-                Recipe(sandwich_id=2, resource_id=6, amount=2),
-                Recipe(sandwich_id=2, resource_id=7, amount=2),
-                Recipe(sandwich_id=2, resource_id=8, amount=2),
+                Recipe(sandwich_id=8, resource_id=1, amount=2),
+                Recipe(sandwich_id=8, resource_id=2, amount=4),
+                Recipe(sandwich_id=8, resource_id=3, amount=2),
+                Recipe(sandwich_id=8, resource_id=4, amount=2),
+                Recipe(sandwich_id=8, resource_id=5, amount=4),
+                Recipe(sandwich_id=8, resource_id=6, amount=2),
+                Recipe(sandwich_id=8, resource_id=7, amount=2),
+                Recipe(sandwich_id=8, resource_id=8, amount=2),
             ]
-        db.add_all(recipes)
-        db.commit()
+            db.add_all(recipes)
+            db.commit()
     except Exception as e:
         db.rollback()
         print(f"Error seeding: {e}")

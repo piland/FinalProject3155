@@ -10,5 +10,7 @@ class Review(Base):
     stars = Column(Integer, nullable=False)
     description = Column(String(750), nullable=False, default="")
     account_id = Column(Integer, ForeignKey("accounts.id"), nullable=False)
+    sandwich_id = Column(Integer, ForeignKey("sandwiches.id"), nullable=False)
 
     account = relationship("Account", back_populates="reviews")
+    sandwich = relationship("Sandwich", back_populates="reviews")
