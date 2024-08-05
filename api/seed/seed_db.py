@@ -52,20 +52,20 @@ def seed_db():
             db.commit()
         if db.query(Resource).count() == 0:
             resources = [
-                Resource(id=1, item="Bread", amount=50, price=0.25),
-                Resource(id=2, item="Ham", amount=50, price=0.75),
-                Resource(id=3, item="Cheese", amount=50, price=0.25),
-                Resource(id=4, item="Tomato", amount=50, price=0.50),
-                Resource(id=5, item="Pickles", amount=50, price=0.15),
-                Resource(id=6, item="Lettuce", amount=50, price=0.25),
-                Resource(id=7, item="Mayo", amount=50, price=0.75),
-                Resource(id=8, item="Onions", amount=50, price=0.25)
+                Resource(id=1, item="Bread", amount=500, price=0.25),
+                Resource(id=2, item="Ham", amount=500, price=0.75),
+                Resource(id=3, item="Cheese", amount=500, price=0.25),
+                Resource(id=4, item="Tomato", amount=500, price=0.50),
+                Resource(id=5, item="Pickles", amount=500, price=0.15),
+                Resource(id=6, item="Lettuce", amount=500, price=0.25),
+                Resource(id=7, item="Mayo", amount=500, price=0.75),
+                Resource(id=8, item="Onions", amount=500, price=0.25)
             ]
             db.add_all(resources)
             db.commit()
         if db.query(PaymentInformation).count() == 0:
             payments = [
-                PaymentInformation(id=1, balance_on_account=0, card_information="None", payment_type="None")
+                PaymentInformation(id=1, balance_on_account=100000000, card_information="None", payment_type="None")
             ]
             db.add_all(payments)
             db.commit()
