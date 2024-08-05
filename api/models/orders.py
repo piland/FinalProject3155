@@ -2,6 +2,7 @@ from sqlalchemy import Column, ForeignKey, Integer, String, DATETIME, BOOLEAN
 from sqlalchemy.orm import relationship, mapped_column
 from datetime import datetime
 from api.dependencies.database import Base
+from api.models.accounts import Account
 
 
 class Order(Base):

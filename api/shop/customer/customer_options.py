@@ -6,6 +6,7 @@ from api.controllers import orders as order_controller
 
 from api.models.orders import Order
 from api.models.order_details import OrderDetail
+from api.models.promo_codes import PromoCode
 
 from api.db_interface import sandwiches as sandwiches_db
 from api.db_interface import recipes as recipes_db
@@ -213,7 +214,12 @@ def get_menu_with_reviews():
 #QUESTION: HOW DO I APPLY A PROMOTIONAL CODE TO ME ORDER?
 #TODO: APPLY PROMOTIONAL CODE TO ORDER
 def apply_promo_code(order_total, promo_code):
-    pass
+    with SessionLocal() as db:
+        promo_code_discount = db.query(PromoCode).filter(promo_code == PromoCode.name).first().discount
+        new_total = order_total * promo_code_discount
+        return new_total
 
 def show_menu():
     sandwiches_db.show_all_sandwiches()
+
+print(apply_promo_code(200, "GRANDOPENING"))
