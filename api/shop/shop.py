@@ -5,8 +5,8 @@ from api.shop.staff.promo_menu import promo_menu
 from api.shop.customer import customer_options
 
 class Shop:
-    def __init__(self):
-        pass
+    def __init__(self, account_id):
+        self.account_id = account_id
 
     """========== STAFF MENU ============"""
     """=================================="""

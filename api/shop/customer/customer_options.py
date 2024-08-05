@@ -7,6 +7,7 @@ from api.controllers import orders as order_controller
 from api.models.orders import Order
 from api.models.order_details import OrderDetail
 from api.models.promo_codes import PromoCode
+from api.models.sandwiches import Sandwich
 
 from api.db_interface import sandwiches as sandwiches_db
 from api.db_interface import recipes as recipes_db
@@ -197,7 +198,35 @@ def check_order():
 #QUESTION: IS THERE A FEATURE THAT ALLOWS ME TO SEARCH FOR SPECIFIC TYPES OF FOOD?
 #TODO: IMPLEMENT SORTING FUNCTION FOR MENU ITEMS
 def get_filtered_menu():
-    pass
+    with SessionLocal() as db:
+        sandwich_list = db.query(Sandwich).all()
+        tags = []
+        for sandwich_item in sandwich_list:
+            exists = 0
+            for existing_tag in tags:
+                if sandwich_item.tags == existing_tag:
+                    exists = 1
+            if exists == 0:
+                if sandwich_item.tags != "":
+                    tags.append(sandwich_item.tags)
+        print("\n======= AVAILABLE FILTERS ========")
+        print(f"{tags}")
+        filter_accepted = 0
+        while filter_accepted == 0:
+            requested_filter = input("\nEnter Requested Filter (Exit/e to Exit): ")
+            if requested_filter.lower() == "exit" or requested_filter.lower() == "e":
+                break
+            else:
+                for tag in tags:
+                    if requested_filter.lower() == tag.lower():
+                        filter_accepted = 1
+                if filter_accepted == 0:
+                    print("Filter not Found!")
+        if filter_accepted == 1:
+            filtered_menu_options = db.query(Sandwich).filter(requested_filter == Sandwich.tags)
+            print("======= FILTERED MENU =======")
+            for menu_option in filtered_menu_options:
+                print(f"{menu_option.id}. {menu_option.sandwich_name}")
 
 #QUESTION: HOW CAN I RATE AND REVIEW DISHES I'VE ORDERED?
 #TODO: IMPLEMENT BOTH GET AND PUT REVIEW FUNCTIONS
@@ -222,4 +251,4 @@ def apply_promo_code(order_total, promo_code):
 def show_menu():
     sandwiches_db.show_all_sandwiches()
 
-print(apply_promo_code(200, "GRANDOPENING"))
+get_filtered_menu()
