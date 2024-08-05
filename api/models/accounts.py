@@ -12,7 +12,7 @@ class Account(Base):
     phone_number = Column(String(25), nullable=True)
     password = Column(String(100), nullable=False)
     role_id = mapped_column(Integer, ForeignKey("roles.id"), nullable=False)
-    payment_information_id = mapped_column(Integer, ForeignKey("payment_information.id"), nullable=True)
+    payment_information_id = mapped_column(Integer, ForeignKey("payment_information.id"), nullable=False)
 
     reviews = relationship("Review", back_populates="account")
     orders = relationship("Order", back_populates="accounts")

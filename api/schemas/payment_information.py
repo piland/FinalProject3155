@@ -6,7 +6,6 @@ from .sandwiches import Sandwich
 
 class PaymentInformationBase(BaseModel):
     balance_on_account: Optional[float]
-    last_transaction_status: Optional[bool]
 
 
 class PaymentInformationCreate(PaymentInformationBase):
@@ -18,7 +17,6 @@ class PaymentInformationUpdate(BaseModel):
     card_information: Optional[str] = None
     balance_on_account: Optional[float] = None
     payment_type: Optional[str] = None
-    last_transaction_status: Optional[bool] = None
 
 
 class PaymentInformation(PaymentInformationBase):

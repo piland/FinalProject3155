@@ -12,7 +12,7 @@ class AccountCreate(AccountBase):
     email: str
     password: str
     role_id: int
-    payment_information_id: Optional[int] = None
+    payment_information_id: int
 
 
 class AccountUpdate(BaseModel):
@@ -30,7 +30,7 @@ class Account(AccountBase):
     email: str
     password: str
     role_id: int
-    payment_information_id: Optional[int] = None
+    payment_information_id: int
 
     class Config:
         from_attributes = True
