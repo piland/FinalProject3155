@@ -2,10 +2,9 @@ import requests
 
 base_url = "http://127.0.0.1:8000"
 
-def create(promo_id, discount, name):
+def create(discount, name):
     url = f"{base_url}/promocodes/"
     data = {
-        "id": promo_id,
         "discount": discount,
         "name": name,
     }
@@ -28,8 +27,8 @@ def read_all():
         print(f"Failed to get promo_code information: {response.status_code}")
         return None
 
-def read_one(promo_id):
-    url = f"{base_url}/promocodes/{promo_id}"
+def read_one(name):
+    url = f"{base_url}/promocodes/{name}"
     response = requests.get(url)
     if response.status_code == 200:
         print(f"promo_code information: {response.json()}")
@@ -38,8 +37,8 @@ def read_one(promo_id):
         print(f"Failed to get promo_code information: {response.status_code}")
         return None
 
-def update(promo_id, name, discount):
-    url = f"{base_url}/promocodes/{promo_id}"
+def update(name, discount):
+    url = f"{base_url}/promocodes/{name}"
     new_data = {}
     if discount is not None:
         new_data["discount"] = discount
@@ -55,8 +54,8 @@ def update(promo_id, name, discount):
         print(f"Failed to Update promo_code info: {response.status_code}")
         return None
 
-def delete(promo_id):
-    url = f"{base_url}/promocodes/{promo_id}"
+def delete(name):
+    url = f"{base_url}/promocodes/{name}"
     response = requests.delete(url)
     if response == 200:
         print(f"Deleted promo_code information: {response.json()}")

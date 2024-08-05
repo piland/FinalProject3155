@@ -10,6 +10,7 @@ class OrderBase(BaseModel):
     account_id: Optional[int] = None
     promo_code_id: Optional[int] = None
     order_type: Optional[str] = None
+    order_status: Optional[bool] = None
 
 
 class OrderCreate(OrderBase):
@@ -22,6 +23,7 @@ class OrderUpdate(BaseModel):
     account_id: Optional[int] = None
     promo_code_id: Optional[int] = None
     order_type: Optional[str] = None
+    order_status: Optional[bool] = None
 
 
 class Order(OrderBase):

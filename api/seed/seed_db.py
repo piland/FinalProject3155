@@ -1,11 +1,11 @@
 # api/utils/seeder.py
 from sqlalchemy.orm import Session
-from api.models.accounts import Account
 from api.models.roles import Role
 from api.models.promo_codes import PromoCode
 from api.models.sandwiches import Sandwich
 from api.models.resources import Resource
 from api.models.recipes import Recipe
+from api.models.accounts import  Account
 from api.models.orders import Order
 from api.models.payment_information import PaymentInformation
 from api.models.order_details import OrderDetail
@@ -139,7 +139,6 @@ def seed_db():
             ]
         db.add_all(recipes)
         db.commit()
-
     except Exception as e:
         db.rollback()
         print(f"Error seeding: {e}")
