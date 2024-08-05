@@ -27,7 +27,7 @@ def sandwich_menu():
         elif option == 2:
             remove_sandwich()
         elif option == 3:
-            show_all_sandwiches()
+            sandwiches.show_all_sandwiches()
         elif option == 4:
             update_sandwich()
         valid_option_selected = 0
@@ -52,7 +52,7 @@ def add_new_sandwich():
     print(f"\n==================================\nADDED SANDWICH {sandwich_name} WITH PRICE ${price}\n==================================")
 
 def remove_sandwich():
-    show_all_sandwiches()
+    sandwiches.show_all_sandwiches()
     id = int(input("Enter ID of Sandwich to be Removed: "))
     sandwich_deleted = sandwiches.delete_sandwich(id)
     if sandwich_deleted:
@@ -61,7 +61,7 @@ def remove_sandwich():
         print("Unable to Delete Sandwich")
 
 def update_sandwich():
-    show_all_sandwiches()
+    sandwiches.show_all_sandwiches()
     id = int(input("Enter ID of Sandwich to be Updated: "))
     name = input("Enter New Name of Sandwich (Leave Blank to Skip): ")
     price_accepted = False
@@ -79,10 +79,3 @@ def update_sandwich():
                 print("Invalid Input, Only Numbers and Decimals Allowed for Price")
     sandwiches.update_sandwich(id, name, price)
     print(f"\nSANDWICH ID {id} UPDATED, NAME: {sandwiches.get_sandwich_by_id(id).sandwich_name}, PRICE: {sandwiches.get_sandwich_by_id(id).price}")
-
-def show_all_sandwiches():
-    sandwich_list = sandwiches.get_all_sandwiches()
-    print("\n========== SANDWICH MENU ==========")
-    for sandwich in sandwich_list:
-        print(sandwich)
-    print("===================================")

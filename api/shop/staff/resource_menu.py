@@ -33,7 +33,7 @@ def resource_menu():
         elif option == 4:
             delete_resource()
         elif option == 5:
-            show_all_resources()
+            resources.show_all_resources()
         elif option == 6:
             update_resource()
         valid_option_selected = 0
@@ -63,7 +63,7 @@ def add_resource():
     if len(resources.get_all_resources()) == 0:
         print("Resource List Empty!")
     else:
-        show_all_resources()
+        resources.show_all_resources()
         id_accepted = False
         cancel = False
         while id_accepted == False:
@@ -85,7 +85,7 @@ def add_resource():
 
 
 def subtract_resource():
-    show_all_resources()
+    resources.show_all_resources()
     id_accepted = False
     cancel = False
     while id_accepted == False:
@@ -109,17 +109,8 @@ def subtract_resource():
         else:
             resources.update_resource(id, amount=new_value)
 
-
-def show_all_resources():
-    resource_list = resources.get_all_resources()
-    print("\n========== RESOURCE LIST ==========")
-    for resource in resource_list:
-        print(resource)
-    print("===================================")
-
-
 def update_resource():
-    show_all_resources()
+    resources.show_all_resources()
     id = int(input("Enter ID of Resource to be Updated: "))
     name = input("Enter New Name of Resource (Leave Blank to Skip): ")
     amount_accepted = False
@@ -139,7 +130,7 @@ def update_resource():
 
 
 def delete_resource():
-    show_all_resources()
+    resources.show_all_resources()
     id = int(input("Enter the ID of the Resource to be Deleted: "))
     resource_deleted = resources.delete_resource(id)
     if resource_deleted:

@@ -1,4 +1,6 @@
+from api.models.orders import Order
 import requests
+import json
 
 base_url = "http://127.0.0.1:8000"
 
@@ -26,6 +28,14 @@ def read_all():
     else:
         print(f"Failed to Get Orders: {response.status_code}")
         return None
+
+def show_all_orders():
+    order_dicts = json.load(read_all())
+    order_items = []
+    print("===== ORDERS =====")
+    for order_dict in order_dicts:
+        order_items.append(Order(**order_dict))
+        print(order_items[len(order_items)-1])
 
 def read_one(item_id):
     url = f"{base_url}/orders/{item_id}"
