@@ -2,6 +2,7 @@ from api.shop.staff.resource_menu import resource_menu
 from api.shop.staff.sandwich_menu import sandwich_menu
 from api.shop.staff.report_menu import report_menu
 from api.shop.staff.promo_menu import promo_menu
+from api.shop.staff.recipe_menu import recipe_menu
 from api.shop.customer import customer_options
 
 class Shop:
@@ -21,13 +22,12 @@ class Shop:
                 print("2. Resources")
                 print("3. Sandwiches")
                 print("4. Recipes")
-                print("5. Orders")
-                print("6. Promos")
+                print("5. Promos")
                 print("0. Shut Down")
 
                 try:
                     option = int(input("\nEnter One of the Options Above: "))
-                    if option > -1 and option < 7:
+                    if option > -1 and option < 6:
                         valid_option_selected = 1
                 except:
                     print("Invalid Option")
@@ -42,10 +42,8 @@ class Shop:
             elif option == 3:
                 sandwich_menu()
             elif option == 4:
-                pass
+                recipe_menu()
             elif option == 5:
-                pass
-            elif option == 6:
                 promo_menu()
             valid_option_selected = 0
 
@@ -61,11 +59,12 @@ class Shop:
                 print("3. Check Order Status")
                 print("4. Write Review")
                 print("5. See Reviews")
+                print("6. Filter Menu")
                 print("0. Exit")
 
                 try:
                     option = int(input("\nEnter One of the Options Above: "))
-                    if option > -1 and option < 6:
+                    if option > -1 and option < 7:
                         valid_option_selected = 1
                 except:
                     print("Invalid Option")
@@ -78,12 +77,14 @@ class Shop:
             elif option == 2:
                 customer_options.place_order()
             elif option == 3:
-                pass
+                customer_options.check_order()
             elif option == 4:
                 pass
             elif option == 5:
                 pass
+            elif option == 6:
+                customer_options.get_filtered_menu()
             valid_option_selected = 0
 
-shop = Shop()
-shop.staff_menu()
+shop = Shop(1)
+shop.customer_menu()

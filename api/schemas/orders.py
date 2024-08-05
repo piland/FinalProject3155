@@ -10,7 +10,7 @@ class OrderBase(BaseModel):
     account_id: Optional[int] = None
     promo_code_id: Optional[int] = None
     order_type: Optional[str] = None
-    order_status: Optional[bool] = None
+    order_status: Optional[bool] = False
 
 
 class OrderCreate(OrderBase):

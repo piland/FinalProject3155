@@ -74,7 +74,3 @@ def show_recipe_for_sandwich(sandwich):
         for recipe_item in sandwich.recipes:
             resource_name = db.query(Resource).filter(recipe_item.resource_id == Resource.id).first().item
             print(f"{recipe_item.resource_id}. {resource_name}: {recipe_item.amount}")
-
-
-
-modify_sandwich_recipe()

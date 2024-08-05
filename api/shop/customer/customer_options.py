@@ -3,11 +3,13 @@ from api.dependencies.database import SessionLocal
 from api.controllers import order_details as order_detail_controller
 from api.controllers import payment_information as payment_information_controller
 from api.controllers import orders as order_controller
+from api.controllers import reviews as review_controller
 
 from api.models.orders import Order
 from api.models.order_details import OrderDetail
 from api.models.promo_codes import PromoCode
 from api.models.sandwiches import Sandwich
+from api.models.reviews import Review
 
 from api.db_interface import sandwiches as sandwiches_db
 from api.db_interface import recipes as recipes_db
@@ -61,7 +63,8 @@ def place_order():
                         "customer_name": customer_name,
                         "description": description,
                         "account_id": 1,
-                        "order_type": order_type
+                        "order_type": order_type,
+                        "order_status": False
                     }
                     order = Order(**order_data)
                     order_created = 1
@@ -153,8 +156,6 @@ def place_order():
             else:
                 for key, value in new_resource_dict.items():
                     resources_db.update_resource(key, amount = value)
-            print("FOR TESTING PLEASE REMOVE LATER")
-            print("NEW RESOURCE LIST")
             resources_db.show_all_resources()
             if placing_order == 0:
                 break
@@ -163,7 +164,11 @@ def place_order():
                 order_detail_item.order_id = created_order.id
                 order_detail_controller.create(db, order_detail_item)
             placing_order = 0
-            print("Finish!")
+
+            leave_review = input("Leave Review of Your Order? (Y/N): ")
+            if leave_review.lower() == "y":
+                for order_detail_item in cart:
+                    write_review(order_detail_item.sandwich_id)
 
 def show_all_payment_information():
     with SessionLocal() as db:
@@ -181,7 +186,6 @@ def get_order_type(type):
     return type
 
 def check_order():
-    #ORDER TABLE FOR DEMONSTRATION PURPOSES ONLY, CUSTOMER SHOULD KNOW ORDER NUMBER THEORETICALLY
     with SessionLocal() as db:
         order_request.show_all_orders()
         order_id_accepted = 0
@@ -195,8 +199,6 @@ def check_order():
                 print("ERROR: Order ID must be Integer and Exist in Order Table")
         print(f"ORDER ID: {order_id} STATUS: #NEED ORDER STATUS")
 
-#QUESTION: IS THERE A FEATURE THAT ALLOWS ME TO SEARCH FOR SPECIFIC TYPES OF FOOD?
-#TODO: IMPLEMENT SORTING FUNCTION FOR MENU ITEMS
 def get_filtered_menu():
     with SessionLocal() as db:
         sandwich_list = db.query(Sandwich).all()
@@ -228,11 +230,35 @@ def get_filtered_menu():
             for menu_option in filtered_menu_options:
                 print(f"{menu_option.id}. {menu_option.sandwich_name}")
 
-#QUESTION: HOW CAN I RATE AND REVIEW DISHES I'VE ORDERED?
-#TODO: IMPLEMENT BOTH GET AND PUT REVIEW FUNCTIONS
-#TODO: DONT WE NEED TO SPECIFY WHAT ITEM WERE REVIEWING?
-def write_review():
-    pass
+def write_review(sandwich_id = None, account_id = None):
+    with SessionLocal() as db:
+        if sandwich_id is not None:
+            sandwich = db.query(Sandwich).filter(sandwich_id == Sandwich.id).first()
+            stars_accepted = False
+            while stars_accepted is False:
+                stars = input(f"{sandwich.sandwich_name} Rating (0-5): ")
+                try:
+                    stars = int(stars)
+                    if stars < 0 or stars > 5:
+                        print("Star Value Must be Between 0 and 5")
+                    else:
+                        stars_accepted = True
+                except:
+                    print("Stars Must be An Integer")
+            description = input("Comments (Leave Blank to Skip: ")
+
+            if account_id is None:
+                account_id = 1
+
+            review = {
+                "stars": stars,
+                "description": description,
+                "account_id": account_id
+            }
+
+            review_object = Review(**review)
+
+            review_controller.create(db, review_object)
 
 def get_reviews_for_single_item():
     pass
@@ -240,8 +266,6 @@ def get_reviews_for_single_item():
 def get_menu_with_reviews():
     pass
 
-#QUESTION: HOW DO I APPLY A PROMOTIONAL CODE TO ME ORDER?
-#TODO: APPLY PROMOTIONAL CODE TO ORDER
 def apply_promo_code(order_total, promo_code):
     with SessionLocal() as db:
         promo_code_discount = db.query(PromoCode).filter(promo_code == PromoCode.name).first().discount
@@ -250,5 +274,3 @@ def apply_promo_code(order_total, promo_code):
 
 def show_menu():
     sandwiches_db.show_all_sandwiches()
-
-get_filtered_menu()

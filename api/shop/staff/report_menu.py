@@ -144,5 +144,3 @@ def show_orders_between_dates():
         orders_between_dates = db.query(Order).filter((date_object <= func.date(Order.order_date)) & (date_two_object >= func.date(Order.order_date))).all()
         for order_item in orders_between_dates:
             print(order_item)
-
-report_menu()
