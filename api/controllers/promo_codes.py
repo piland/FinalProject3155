@@ -6,9 +6,8 @@ from sqlalchemy.exc import SQLAlchemyError
 
 def create(db: Session, request):
     new_item = model.PromoCode(
-        id=request.id,
         name=request.name,
-        discount=request.discount,
+        discount=request.discount
     )
 
     try:
@@ -31,9 +30,9 @@ def read_all(db: Session):
     return result
 
 
-def read_one(db: Session, promo_id):
+def read_one(db: Session, name):
     try:
-        item = db.query(model.PromoCode).filter(model.PromoCode.id == promo_id).first()
+        item = db.query(model.PromoCode).filter(model.PromoCode.name == name).first()
         if not item:
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
     except SQLAlchemyError as e:
@@ -42,9 +41,9 @@ def read_one(db: Session, promo_id):
     return item
 
 
-def update(db: Session, promo_id, request):
+def update(db: Session, name, request):
     try:
-        item = db.query(model.PromoCode).filter(model.PromoCode.id == promo_id)
+        item = db.query(model.PromoCode).filter(model.PromoCode.name == name)
         if not item.first():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
         update_data = request.dict(exclude_unset=True)
@@ -56,9 +55,9 @@ def update(db: Session, promo_id, request):
     return item.first()
 
 
-def delete(db: Session, promo_id):
+def delete(db: Session, name):
     try:
-        item = db.query(model.PromoCode).filter(model.PromoCode.id == promo_id)
+        item = db.query(model.PromoCode).filter(model.PromoCode.name == name)
         if not item.first():
             raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
         item.delete(synchronize_session=False)

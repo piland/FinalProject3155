@@ -19,12 +19,10 @@ def create(request: schema.AccountCreate, db: Session = Depends(get_db)):
 def read_all(db: Session = Depends(get_db)):
     return controller.read_all(db)
 
-@router.get("/accounts/email/{email}", response_model=schema.Account)
+
+@router.get("/email/{email}", response_model=schema.Account)
 def read_account_by_email(email: str, db: Session = Depends(get_db)):
-    account = controller.get_account_by_email(db, email)
-    if account is None:
-        raise HTTPException(status_code=404, detail="Account not found")
-    return account
+    return controller.get_account_by_email(db, email)
 
 @router.get("/{item_id}", response_model=schema.Account)
 def read_one(item_id: int, db: Session = Depends(get_db)):
