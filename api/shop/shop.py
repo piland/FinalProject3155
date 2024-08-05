@@ -4,10 +4,15 @@ from api.shop.staff.report_menu import report_menu
 from api.shop.staff.promo_menu import promo_menu
 from api.shop.staff.recipe_menu import recipe_menu
 from api.shop.customer import customer_options
+import api.account_management.account_management as account_management
 
 class Shop:
     def __init__(self, account_id):
         self.account_id = account_id
+        self.account_management = account_management.AccountManagement()
+
+    def login_menu(self):
+        self.account_id = self.account_management.login_menu()
 
     """========== STAFF MENU ============"""
     """=================================="""
@@ -75,16 +80,16 @@ class Shop:
             elif option == 1:
                 customer_options.show_menu()
             elif option == 2:
-                customer_options.place_order()
+                customer_options.place_order(account_id=self.account_id)
             elif option == 3:
                 customer_options.check_order()
             elif option == 4:
-                pass
+                customer_options.write_review(account_id=self.account_id)
             elif option == 5:
-                pass
+                customer_options.get_menu_with_reviews()
             elif option == 6:
                 customer_options.get_filtered_menu()
             valid_option_selected = 0
 
+
 shop = Shop(1)
-shop.customer_menu()

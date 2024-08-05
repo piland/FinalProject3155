@@ -1,6 +1,6 @@
 from api.models.promo_codes import PromoCode
 from api.requests import promo_codes as promo_code_request
-
+from api.dependencies.database import SessionLocal
 def promo_menu():
     exit = 0
     valid_option_selected = 0
@@ -70,10 +70,26 @@ def create_promo_code():
                     except:
                         print("ERROR: Invalid Input")
 
-
-#TODO: DELETE PROMO CODE
 def delete_promo_code():
-    pass
+    with SessionLocal() as db:
+        promo_code_request.show_all_promo_codes()
+        name_accepted = 0
+        exit = 0
+        while name_accepted == 0:
+            name = input("Enter Name of Promo Code to be Deleted (Exit/e to Cancel): ")
+            if name.lower() == "exit" or name.lower() == "e":
+                exit = 1
+                break
+            elif name.replace(" ", "") == "":
+                print("ERROR: Name cannot be blank")
+            else:
+                deleted_promo_code = promo_code_request.delete(name.upper())
+                if deleted_promo_code is None:
+                    print("Unable to Delete Promo Code")
+                else:
+                    print("Promo Code Deleted!")
 
 def modify_promo_code():
     pass
+
+delete_promo_code()

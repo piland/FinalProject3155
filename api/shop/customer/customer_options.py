@@ -21,7 +21,7 @@ from api.requests import orders as order_request
 
 #QUESTION: HOW TO PLACE AN ORDER? I DO NOT WISH TO SIGN UP FOR AN ACCOUNT
 #TODO: ALERT WHEN ORDER CANNOT BE PROCESSED WHEN TRYING TO ORDER INSTEAD OF THE END
-def place_order():
+def place_order(account_id):
     with SessionLocal() as db:
         cart = []
         placing_order = 1
@@ -62,7 +62,7 @@ def place_order():
                     order_data = {
                         "customer_name": customer_name,
                         "description": description,
-                        "account_id": 1,
+                        "account_id": account_id,
                         "order_type": order_type,
                         "order_status": False
                     }
@@ -155,7 +155,7 @@ def place_order():
                 print("Not Enough Resources to Process Order!")
             else:
                 for key, value in new_resource_dict.items():
-                    resources_db.update_resource(key, amount = value)
+                    resources_db.update_resource(key, amount=value)
             resources_db.show_all_resources()
             if placing_order == 0:
                 break
@@ -168,7 +168,7 @@ def place_order():
             leave_review = input("Leave Review of Your Order? (Y/N): ")
             if leave_review.lower() == "y":
                 for order_detail_item in cart:
-                    write_review(order_detail_item.sandwich_id)
+                    write_review(account_id=account_id, sandwich_id=order_detail_item.sandwich_id)
 
 def show_all_payment_information():
     with SessionLocal() as db:
@@ -257,21 +257,26 @@ def write_review(sandwich_id = None, account_id = None):
             review = {
                 "stars": stars,
                 "description": description,
-                "account_id": account_id
+                "account_id": account_id,
+                "sandwich_id": sandwich_id
             }
 
             review_object = Review(**review)
 
             review_controller.create(db, review_object)
 
-def get_reviews_for_single_item():
-    pass
-
 def get_menu_with_reviews():
     with SessionLocal() as db:
         sandwiches = db.query(Sandwich).all()
-        reviews = db.query(Review).all()
 
+        print("======= REVIEWS =======")
+        for sandwich_item in sandwiches:
+            total_stars = 0
+            reviews = db.query(Review).filter(sandwich_item.id == Review.sandwich_id).all()
+            for review_item in reviews:
+                total_stars += review_item.stars
+            avg_sandwich_stars = total_stars/5
+            print(f"{sandwich_item.id}. {sandwich_item.sandwich_name}: {avg_sandwich_stars}/5")
 
 def apply_promo_code(order_total, promo_code):
     with SessionLocal() as db:
