@@ -1,13 +1,14 @@
 import requests
+import json
+from api.models.promo_codes import PromoCode
 
 base_url = "http://127.0.0.1:8000"
 
-def create(promo_id, discount, name):
+def create(discount, name):
     url = f"{base_url}/promocodes/"
     data = {
-        "id": promo_id,
         "discount": discount,
-        "name": name,
+        "name": name
     }
     response = requests.post(url, json = data)
     if response.status_code == 200:
@@ -37,6 +38,12 @@ def read_one(promo_id):
     else:
         print(f"Failed to get promo_code information: {response.status_code}")
         return None
+
+def show_all_promo_codes():
+    promo_dicts = read_all()
+    print("===== PROMO CODES =====")
+    for promo_dict in promo_dicts:
+        print(f"ID: {promo_dict["id"]}, CODE: {promo_dict["name"]}, DISCOUNT: {promo_dict["discount"]}")
 
 def update(promo_id, name, discount):
     url = f"{base_url}/promocodes/{promo_id}"

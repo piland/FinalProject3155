@@ -1,4 +1,8 @@
 from api.models.orders import Order
+from api.models.order_details import OrderDetail
+from api.models.sandwiches import Sandwich
+from api.models.recipes import Recipe
+from api.models.promo_codes import PromoCode
 import requests
 import json
 
@@ -30,12 +34,10 @@ def read_all():
         return None
 
 def show_all_orders():
-    order_dicts = json.load(read_all())
-    order_items = []
+    order_dicts = read_all()
     print("===== ORDERS =====")
     for order_dict in order_dicts:
-        order_items.append(Order(**order_dict))
-        print(order_items[len(order_items)-1])
+        print(f"ID: {order_dict["id"]}, NAME: {order_dict["customer_name"]}, DATE: {order_dict["order_date"]}, DESC: {order_dict["description"]}, TYPE: {order_dict["order_type"]}, ACCOUNT: {order_dict["account_id"]}")
 
 def read_one(item_id):
     url = f"{base_url}/orders/{item_id}"
