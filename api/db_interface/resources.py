@@ -40,6 +40,13 @@ def update_resource(resource_id: int, item: str = None, amount: int = None):
             return resource
         return None
 
+def show_all_resources():
+    resource_list = get_all_resources()
+    print("\n========== RESOURCE LIST ==========")
+    for resource in resource_list:
+        print(resource)
+    print("===================================")
+
 def delete_resource(resource_id: int):
     with SessionLocal() as db:
         resource = db.query(Resource).filter(Resource.id == resource_id).first()

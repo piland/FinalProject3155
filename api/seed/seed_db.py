@@ -44,7 +44,9 @@ def seed_db():
                 Sandwich(id=3, sandwich_name="Large Ham Sandwich", price=8.00),
                 Sandwich(id=4, sandwich_name="Small Double Ham Sandwich", price=7.00),
                 Sandwich(id=5, sandwich_name="Regular Double Ham Sandwich", price=8.50),
-                Sandwich(id=6, sandwich_name="Large Double Ham Sandwich", price=10.00)
+                Sandwich(id=6, sandwich_name="Large Double Ham Sandwich", price=10.00),
+                Sandwich(id=7, sandwich_name="Veggie Sandwich", price=7.00),
+                Sandwich(id=8, sandwich_name="Spicy Ham Sandwich", price=7.00)
             ]
             db.add_all(sandwiches)
             db.commit()
@@ -135,7 +137,26 @@ def seed_db():
                 Recipe(sandwich_id=6, resource_id=5, amount=4),
                 Recipe(sandwich_id=6, resource_id=6, amount=4),
                 Recipe(sandwich_id=6, resource_id=7, amount=4),
-                Recipe(sandwich_id=6, resource_id=8, amount=4)
+                Recipe(sandwich_id=6, resource_id=8, amount=4),
+
+                # ID 7 = "Veggie" Sandwich
+                Recipe(sandwich_id=7, resource_id=1, amount=2),
+                Recipe(sandwich_id=7, resource_id=3, amount=2),
+                Recipe(sandwich_id=7, resource_id=4, amount=2),
+                Recipe(sandwich_id=7, resource_id=5, amount=2),
+                Recipe(sandwich_id=7, resource_id=6, amount=2),
+                Recipe(sandwich_id=7, resource_id=7, amount=2),
+                Recipe(sandwich_id=7, resource_id=8, amount=2),
+
+                # ID 8 = Spicy Ham Sandwich
+                Recipe(sandwich_id=2, resource_id=1, amount=2),
+                Recipe(sandwich_id=2, resource_id=2, amount=4),
+                Recipe(sandwich_id=2, resource_id=3, amount=2),
+                Recipe(sandwich_id=2, resource_id=4, amount=2),
+                Recipe(sandwich_id=2, resource_id=5, amount=4),
+                Recipe(sandwich_id=2, resource_id=6, amount=2),
+                Recipe(sandwich_id=2, resource_id=7, amount=2),
+                Recipe(sandwich_id=2, resource_id=8, amount=2),
             ]
         db.add_all(recipes)
         db.commit()

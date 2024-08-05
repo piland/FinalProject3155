@@ -31,6 +31,13 @@ def update_sandwich(sandwich_id: int, sandwich_name: str = None, price: float = 
             return sandwich
         return None
 
+def show_all_sandwiches():
+    sandwich_list = get_all_sandwiches()
+    print("\n========== SANDWICH MENU ==========")
+    for sandwich in sandwich_list:
+        print(sandwich)
+    print("===================================")
+
 def delete_sandwich(sandwich_id: int):
     with SessionLocal() as db:
         sandwich = db.query(Sandwich).filter(Sandwich.id == sandwich_id).first()
