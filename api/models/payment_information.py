@@ -10,6 +10,5 @@ class PaymentInformation(Base):
     balance_on_account = Column(DECIMAL, default=0)
     card_information = Column(String(100), nullable=False)
     payment_type = Column(String(100), nullable=False)
-    last_transaction_status = Column(BOOLEAN, nullable=True)
 
     accounts = relationship('Account', back_populates='payment_information')

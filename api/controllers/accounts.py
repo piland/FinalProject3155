@@ -46,6 +46,18 @@ def read_one(db: Session, item_id):
     return item
 
 
+def get_account_by_email(db: Session, item_email: str):
+    try:
+        item = db.query(model.Account).filter(model.Account.email == item_email).first()
+        if not item:
+            raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail="Id not found!")
+    except SQLAlchemyError as e:
+        error = str(e.__dict__['orig'])
+        raise HTTPException(status_code=status.HTTP_400_BAD_REQUEST, detail=error)
+    return item
+
+
+
 def update(db: Session, item_id, request):
     try:
         item = db.query(model.Account).filter(model.Account.id == item_id)

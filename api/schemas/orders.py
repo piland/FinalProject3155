@@ -13,7 +13,7 @@ class OrderBase(BaseModel):
 
 
 class OrderCreate(OrderBase):
-    pass
+    order_date: Optional[datetime] = None
 
 
 class OrderUpdate(BaseModel):

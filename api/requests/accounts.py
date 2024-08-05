@@ -44,6 +44,15 @@ def read_one(account_id):
         print(f"Failed to Get Account: {response.status_code}")
         return None
 
+def read_by_email(email):
+    url = f"{base_url}/accounts/{email}"
+    response = requests.get(url)
+    if response.status_code == 200:
+        return response.json()
+    else:
+        print(f"Failed to Get Account by Email: {response.status_code}")
+        return None
+
 
 def update(account_id, name=None, age=None, phone_number=None, email=None, role_id=None, password=None,
            payment_information_id=None):
@@ -65,10 +74,10 @@ def update(account_id, name=None, age=None, phone_number=None, email=None, role_
         new_data["payment_information_id"] = payment_information_id
     response = requests.put(url, json=new_data)
     if response == 200:
-        print(f"Payment Info Updated: {response.json()}")
+        print(f"Account Info Updated: {response.json()}")
         return response.json()
     else:
-        print(f"Failed to Update Payment Info: {response.status_code}")
+        print(f"Failed to Update Account Info: {response.status_code}")
         return None
 
 

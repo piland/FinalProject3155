@@ -3,13 +3,12 @@ import requests
 base_url = "http://127.0.0.1:8000"
 
 
-def create(card_information, balance_on_account, payment_type, last_transaction_status):
+def create(card_information, balance_on_account, payment_type):
     url = f"{base_url}/paymentinformation/"
     data = {
         "card_information": card_information,
         "balance_on_account": balance_on_account,
-        "payment_type": payment_type,
-        "last_transaction_status": last_transaction_status
+        "payment_type": payment_type
     }
     response = requests.post(url, json=data)
     if response.status_code == 200:
@@ -42,8 +41,7 @@ def read_one(payment_information_id):
         return None
 
 
-def update(payment_information_id, card_information=None, balance_on_account=None, payment_type=None,
-           last_transaction_status=None):
+def update(payment_information_id, card_information=None, balance_on_account=None, payment_type=None,):
     url = f"{base_url}/paymentinformation/{payment_information_id}"
     new_data = {}
     if card_information is not None:
@@ -52,8 +50,6 @@ def update(payment_information_id, card_information=None, balance_on_account=Non
         new_data["balance_on_account"] = balance_on_account
     if payment_type is not None:
         new_data["payment_type"] = payment_type
-    if last_transaction_status is not None:
-        new_data["last_transaction_status"] = last_transaction_status
     response = requests.put(url, json=new_data)
     if response == 200:
         print(f"Payment Info Updated: {response.json()}")
