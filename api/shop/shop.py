@@ -2,6 +2,7 @@ from api.requests import accounts, order_details, orders, payment_information, r
 from api.models.orders import Order
 from api.controllers.orders import create as create_order
 from api.models.order_details import OrderDetail
+from api.models.sandwiches import Sandwich
 from api.controllers.order_details import create as create_order_detail
 from api.models.payment_information import PaymentInformation
 from api.controllers import payment_information as payment_information_controller, orders as order_controller, order_details as order_detail_controller
@@ -9,6 +10,7 @@ from api.requests.payment_information import update as payment_information_updat
 from api.db_interface import recipes, resources, roles, sandwiches
 from api.shop.staff.resource_menu import resource_menu, show_all_resources
 from api.shop.staff.sandwich_menu import sandwich_menu, show_all_sandwiches
+from api.shop.staff.report_menu import report_menu
 from api.db_interface import recipes as recipes_db, resources as resources_db
 from api.dependencies.database import SessionLocal
 class Shop:
@@ -45,7 +47,7 @@ class Shop:
             if option == 0:
                 exit = 1
             elif option == 1:
-                pass
+                report_menu()
             elif option == 2:
                 resource_menu()
             elif option == 3:
@@ -60,32 +62,7 @@ class Shop:
 
     """STAFF FUNCTIONS"""
     """========================================================"""
-    #QUESTION: HOW DOES THE SYSTEM ALERT ME IF THERE ARE INSUFFICIENT INGREDIENTS TO FULFILL AN ORDER?
-    #TODO: SHOW WHEN THERE ARENT ENOUGH INGREDIENTS
-    def is_enough_ingredients(self, recipe_id):
-        pass
 
-    #QUESTION: HOW CAN I VIEW THE LIST OF ALL ORDERS? IS THERE AN OPTION TO VIEW THE DETAILS OF A SPECIFIC ORDER?
-    #TODO: VIEW ALL ORDERS
-    def show_all_orders(self):
-        pass
-
-    #TODO: VIEW SINGLE ORDER DETAILS
-    def show_order_details(self, order_id):
-        pass
-
-    #QUESTION: HOW CAN I IDENTIFY DISHES THAT ARE LESS POPULAR OR HAVE RECEIVED COMPLAINTS? IS THERE A WAY TO UNDERSTAND CUSTOMER DISATISFACTION?
-    #TODO: VIEW UNPOPULAR ORDERS, ASK FOR THRESHOLD (eg. order constitutes 10% or less of sales or something)
-    def show_unpopular_orders(self, threshold):
-        pass
-
-    #TODO: SHOW LOW-RATED ORDERS, ASK FOR THRESHOLD (eg. less than 2 stars)
-    def show_low_rated_orders(self):
-        pass
-
-    #TODO: SHOW LOW-RATED ORDERS WITH DESCRIPTION
-    def show_low_rated_orders_details(self):
-        pass
 
     #QUESTION: CAN I CREATE AND MANAGE PROMOTIONAL CODES, INCLUDING SETTING EXPIRATION DATES?
     #TODO: CREATE PROMO CODES, ADD PROMO API
@@ -99,18 +76,6 @@ class Shop:
     #TODO: DELETE PROMO CODE
     def delete_promo_code(self, promo_code):
         pass
-
-    #QUESTION: HOW CAN I DETERMINE THE TOTAL REVENUE GENERATED FROM FOOD SALES ON ANY GIVEN DAY?
-    #TODO: SHOW TOTAL REVENUE
-    def show_total_revenue(self, date):
-        pass
-        #TODO: sum orders totals on date
-
-    #QUESTION: IS THERE A WAY TO VIEW THE LIST OF ORDERS WITHIN A SPECIFIC DATE RANGE?
-    #TODO: LIST OF ORDER IN DATE RANGE
-    def show_orders_between_dates(self, start_date, end_date):
-        pass
-        #TODO: filter order_list to show only between start_date and end_date
 
     """CUSTOMER FUNCTIONS"""
     """========================================================"""
@@ -347,4 +312,4 @@ class Shop:
         pass
 
 shop = Shop()
-shop.customer_menu()
+shop.staff_main_menu()
