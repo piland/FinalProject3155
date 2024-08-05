@@ -9,7 +9,8 @@ def create(db: Session, request):
         customer_name=request.customer_name,
         description=request.description,
         account_id=request.account_id,
-        order_type=request.order_type
+        order_type=request.order_type,
+        order_status=request.order_status
     )
 
     try:

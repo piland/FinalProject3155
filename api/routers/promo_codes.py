@@ -20,16 +20,16 @@ def read_all(db: Session = Depends(get_db)):
     return controller.read_all(db)
 
 
-@router.get("/{promo_id}", response_model=schema.PromoCode)
-def read_one(promo_id: int, db: Session = Depends(get_db)):
-    return controller.read_one(db, promo_id=promo_id)
+@router.get("/{name}", response_model=schema.PromoCode)
+def read_one(name: str, db: Session = Depends(get_db)):
+    return controller.read_one(db, name=name)
 
 
-@router.put("/{promo_id}", response_model=schema.PromoCode)
-def update(promo_id: int, request: schema.PromoCodeUpdate, db: Session = Depends(get_db)):
-    return controller.update(db=db, promo_id=promo_id, request=request)
+@router.put("/{name}", response_model=schema.PromoCode)
+def update(name: str, request: schema.PromoCodeUpdate, db: Session = Depends(get_db)):
+    return controller.update(db=db, name=name, request=request)
 
 
-@router.delete("/{promo_id}")
-def delete(promo_id: int, db: Session = Depends(get_db)):
-    return controller.delete(db=db, promo_id=promo_id)
+@router.delete("/{name}")
+def delete(name: str, db: Session = Depends(get_db)):
+    return controller.delete(db=db, name=name)

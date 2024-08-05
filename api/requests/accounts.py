@@ -46,12 +46,15 @@ def read_one(account_id):
 
 def read_by_email(email):
     url = f"{base_url}/accounts/{email}"
-    response = requests.get(url)
-    if response.status_code == 200:
+    try:
+        response = requests.get(url)
+        response.raise_for_status()
         return response.json()
-    else:
-        print(f"Failed to Get Account by Email: {response.status_code}")
-        return None
+    except requests.HTTPError as http_err:
+        print(f"HTTP error occurred: {http_err}")
+    except Exception as err:
+        print(f"Other error occurred: {err}")
+    return None
 
 
 def update(account_id, name=None, age=None, phone_number=None, email=None, role_id=None, password=None,

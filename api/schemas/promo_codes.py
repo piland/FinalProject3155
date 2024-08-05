@@ -17,7 +17,6 @@ class PromoCodeUpdate(BaseModel):
 
 
 class PromoCode(PromoCodeBase):
-    id: int
     discount: float
     name: str
 
