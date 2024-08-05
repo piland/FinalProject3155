@@ -58,7 +58,6 @@ def add_new_resource():
     print(
         f"\n==================================\nADDED RESOURCE {name} WITH STARTING AMOUNT {starting_amount}\n==================================")
 
-
 def add_resource():
     if len(resources.get_all_resources()) == 0:
         print("Resource List Empty!")
