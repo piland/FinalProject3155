@@ -245,34 +245,48 @@ def get_filtered_menu():
 
 def write_review(sandwich_id = None, account_id = None):
     with SessionLocal() as db:
-        if sandwich_id is not None:
-            sandwich = db.query(Sandwich).filter(sandwich_id == Sandwich.id).first()
-            stars_accepted = False
-            while stars_accepted is False:
-                stars = input(f"{sandwich.sandwich_name} Rating (0-5): ")
+        if sandwich_id is None:
+            sandwiches_db.show_all_sandwiches()
+            sandwich_accepted = False
+            while sandwich_accepted is not True:
+                sandwich_id = input("Enter Sandwich ID to Leave Review: ")
                 try:
-                    stars = int(stars)
-                    if stars < 0 or stars > 5:
-                        print("Star Value Must be Between 0 and 5")
+                    sandwich_id = int(sandwich_id)
+                    sandwich = db.query(Sandwich).filter(sandwich_id == Sandwich.id).first()
+                    if sandwich is not None:
+                        sandwich_accepted = True
                     else:
-                        stars_accepted = True
+                        print("Sandwich is not found")
                 except:
-                    print("Stars Must be An Integer")
-            description = input("Comments (Leave Blank to Skip): ")
+                    print("Sandwich ID must be Integer!")
+        sandwich = db.query(Sandwich).filter(sandwich_id == Sandwich.id).first()
+        print(f"SANDWICH ID: {sandwich_id} SANDWICH: {sandwich}")
+        stars_accepted = False
+        while stars_accepted is False:
+            stars = input(f"{sandwich.sandwich_name} Rating (0-5): ")
+            try:
+                stars = int(stars)
+                if stars < 0 or stars > 5:
+                    print("Star Value Must be Between 0 and 5")
+                else:
+                    stars_accepted = True
+            except:
+                print("Stars Must be An Integer")
+        description = input("Comments (Leave Blank to Skip): ")
 
-            if account_id is None:
-                account_id = 1
+        if account_id is None:
+            account_id = 1
 
-            review = {
-                "stars": stars,
-                "description": description,
-                "account_id": account_id,
-                "sandwich_id": sandwich_id
-            }
+        review = {
+            "stars": stars,
+            "description": description,
+            "account_id": account_id,
+            "sandwich_id": sandwich_id
+        }
 
-            review_object = Review(**review)
+        review_object = Review(**review)
 
-            review_controller.create(db, review_object)
+        review_controller.create(db, review_object)
 
 def get_menu_with_reviews():
     with SessionLocal() as db:
@@ -282,7 +296,9 @@ def get_menu_with_reviews():
         for sandwich_item in sandwiches:
             total_stars = 0
             reviews = db.query(Review).filter(sandwich_item.id == Review.sandwich_id).all()
+            print(f"GETTING STARS FOR {sandwich_item}")
             for review_item in reviews:
+                print(f"")
                 total_stars += review_item.stars
             avg_sandwich_stars = total_stars/5
             print(f"{sandwich_item.id}. {sandwich_item.sandwich_name}: {avg_sandwich_stars}/5")
@@ -295,3 +311,5 @@ def apply_promo_code(order_total, promo_code):
 
 def show_menu():
     sandwiches_db.show_all_sandwiches()
+
+write_review(account_id=1)

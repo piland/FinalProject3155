@@ -6,7 +6,9 @@ def create(stars, description):
     url = f"{base_url}/reviews/"
     data = {
         "stars": stars,
-        "description": description
+        "description": description,
+        "account_id": account_id,
+        "sandwich_id": sandwich_id
     }
     response = requests.post(url, json = data)
     if response.status_code == 200:

@@ -123,5 +123,3 @@ def modify_promo_code():
                 else:
                     print("Unable to update promo code.")
                 name_accepted = True
-
-delete_promo_code()
