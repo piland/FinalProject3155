@@ -2,6 +2,7 @@ from api.dependencies.database import SessionLocal
 from api.models.sandwiches import Sandwich
 from api.models.order_details import OrderDetail
 from api.models.orders import Order
+from api.models.reviews import Review
 
 from api.requests import orders as orders_request, order_details as order_detail_request
 
@@ -45,7 +46,7 @@ def report_menu():
         elif option == 5:
             show_unpopular_orders()
         elif option == 6:
-            pass
+            show_low_rated_orders()
         elif option == 7:
             pass
         valid_option_selected = 0
@@ -97,7 +98,28 @@ def show_unpopular_orders():
 
 #TODO: SHOW LOW-RATED ORDERS, ASK FOR THRESHOLD (eg. less than 2 stars)
 def show_low_rated_orders():
-    pass
+    with SessionLocal() as db:
+        sandwich_list = db.query(Sandwich).all()
+        review_list = db.query(Review).all()
+        sandwich_reviews_dict = {}
+        for sandwich_item in sandwich_list:
+            sandwich_reviews_dict[f"{sandwich_item.sandwich_name}"] = 0
+            total_reviews = 0
+            total_stars = 0
+            for review in review_list:
+                if review.sandwich_id == sandwich_item.id:
+                    total_reviews += 1
+                    total_stars += review.stars
+
+            if total_reviews > 0 and total_stars > 0:
+                print(sandwich_item.sandwich_name)
+                sandwich_reviews_dict[f"{sandwich_item.sandwich_name}"] = total_stars / total_reviews
+
+        sorted_review_dict = dict(sorted(sandwich_reviews_dict.items(), key=lambda item: item[1], reverse=True))
+
+        print("\n===== LIFETIME SANDWICH RATINGS =====")
+        for key, value in sorted_review_dict.items():
+            print(f"{key}: {value}")
 
 #TODO: SHOW LOW-RATED ORDERS WITH DESCRIPTION
 def show_low_rated_orders_details():

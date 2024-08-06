@@ -87,4 +87,5 @@ class Shop:
             valid_option_selected = 0
 
 shop = Shop(1)
-shop.customer_menu()
+# shop.customer_menu()
+shop.staff_menu()
