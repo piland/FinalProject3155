@@ -85,6 +85,3 @@ class Shop:
             elif option == 6:
                 customer_options.get_filtered_menu()
             valid_option_selected = 0
-
-shop = Shop(1)
-shop.customer_menu()

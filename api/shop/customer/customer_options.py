@@ -295,5 +295,3 @@ def apply_promo_code(order_total, promo_code):
 
 def show_menu():
     sandwiches_db.show_all_sandwiches()
-
-place_order(1)
