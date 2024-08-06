@@ -5,8 +5,10 @@ import api.routers.accounts
 import api.requests.accounts
 import api.controllers.roles
 import api.requests.payment_information
+from api.models.sandwiches import Sandwich
+from api.models.recipes import Recipe
 from api.dependencies.database import SessionLocal
-
+from api.shop.shop import Shop
 
 class AccountManagement:
     def __init__(self):
@@ -55,6 +57,7 @@ class AccountManagement:
             account_id = response.get("id")
             if response.get("password") == password:
                 print(f"Welcome back, {response['name']}")
+                shop = Shop(account_id)
                 return account_id
             else:
                 print("Invalid password. Please try again.")
@@ -112,9 +115,10 @@ class AccountManagement:
         print("What is your role?")
         roles = api.controllers.roles.read_all(db=SessionLocal())
         for role in roles:
-            print(f"{role['id']}: {role['name']}, {role['description']}")
+            if role.id != 1:
+                print(f"{role.id}: {role.name}, {role.description}")
         role_id = input("Role ID: ")
-        while not role_id.isdigit() or int(role_id) not in [role['id'] for role in roles]:
+        while not role_id.isdigit() or int(role_id) not in [role.id for role in roles]:
             print("Sorry, that isn't a valid role. Please choose one of the above numbers.")
             role_id = input("Role ID: ")
         role_id = int(role_id)
@@ -153,6 +157,7 @@ class AccountManagement:
 
     def guest_login(self):
         print("Continuing as Guest.")
+        shop = Shop(1)
         return api.requests.accounts.read_one(1)
 
     def create_payment_information(self, balance, card_info, payment_type):
@@ -167,3 +172,6 @@ class AccountManagement:
         else:
             print("Failed to Create Payment Information")
             return None
+
+ac = AccountManagement()
+ac.login_menu()

@@ -311,5 +311,3 @@ def apply_promo_code(order_total, promo_code):
 
 def show_menu():
     sandwiches_db.show_all_sandwiches()
-
-write_review(account_id=1)
