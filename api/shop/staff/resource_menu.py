@@ -1,5 +1,6 @@
 from api.db_interface import resources
-
+from api.models.resources import Resource
+from api.dependencies.database import SessionLocal
 def resource_menu():
     exit = 0
     valid_option_selected = 0
@@ -59,54 +60,58 @@ def add_new_resource():
         f"\n==================================\nADDED RESOURCE {name} WITH STARTING AMOUNT {starting_amount}\n==================================")
 
 def add_resource():
-    if len(resources.get_all_resources()) == 0:
-        print("Resource List Empty!")
-    else:
+    with SessionLocal() as db:
+        if len(resources.get_all_resources()) == 0:
+            print("Resource List Empty!")
+        else:
+            resources.show_all_resources()
+            id_accepted = False
+            cancel = False
+            while id_accepted == False:
+                id = input("Enter the ID of the Resource to Restock (Cancel/c to Cancel): ")
+                if id.lower() == "cancel" or id.lower() == "c":
+                    cancel = True
+                    break
+                try:
+                    id = int(id)
+                    db_entry_amount = db.query(Resource).filter(id == Resource.id).first().amount
+                    id_accepted = True
+                except:
+                    print("ID must be an Integer and Exist in Resources")
+            if cancel == True:
+                print("Cancelling Operation")
+            else:
+                amount = int(input("Enter the Amount to Add: "))
+                new_value = db_entry_amount + amount
+                resources.update_resource(id, amount=new_value)
+
+
+def subtract_resource():
+    with SessionLocal() as db:
         resources.show_all_resources()
         id_accepted = False
         cancel = False
         while id_accepted == False:
-            id = input("Enter the ID of the Resource to Restock (Cancel/c to Cancel): ")
+            id = input("Enter the ID of the Resource to be Subtracted (Cancel/c to Cancel): ")
             if id.lower() == "cancel" or id.lower() == "c":
                 cancel = True
                 break
             try:
                 id = int(id)
-                db_entry_amount = resources.get_resource_by_id(id).amount
+                db_entry_amount = db.query(Resource).filter(id == Resource.id).first().amount
+                print(resources.get_resource_by_id(id))
+                id_accepted = True
             except:
                 print("ID must be an Integer and Exist in Resources")
         if cancel == True:
             print("Cancelling Operation")
         else:
-            amount = int(input("Enter the Amount to Add: "))
-            new_value = db_entry_amount + amount
-            resources.update_resource(id, amount=new_value)
-
-
-def subtract_resource():
-    resources.show_all_resources()
-    id_accepted = False
-    cancel = False
-    while id_accepted == False:
-        id = input("Enter the ID of the Resource to be Subtracted (Cancel/c to Cancel): ")
-        if id.lower() == "cancel" or id.lower() == "c":
-            cancel = True
-            break
-        try:
-            id = int(id)
-            db_entry_amount = resources.get_resource_by_id(id).amount
-            print(resources.get_resource_by_id(id))
-        except:
-            print("ID must be an Integer and Exist in Resources")
-    if cancel == True:
-        print("Cancelling Operation")
-    else:
-        amount = int(input("Enter the Amount to Subtract: "))
-        new_value = db_entry_amount - amount
-        if new_value < 0:
-            print("ERROR: Resource Amounts Cannot be Negative, Aborting Attempt...")
-        else:
-            resources.update_resource(id, amount=new_value)
+            amount = int(input("Enter the Amount to Subtract: "))
+            new_value = db_entry_amount - amount
+            if new_value < 0:
+                print("ERROR: Resource Amounts Cannot be Negative, Aborting Attempt...")
+            else:
+                resources.update_resource(id, amount=new_value)
 
 def update_resource():
     resources.show_all_resources()

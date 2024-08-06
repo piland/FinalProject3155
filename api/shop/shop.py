@@ -4,22 +4,25 @@ from api.shop.staff.report_menu import report_menu
 from api.shop.staff.promo_menu import promo_menu
 from api.shop.staff.recipe_menu import recipe_menu
 from api.shop.customer import customer_options
+from api.dependencies.database import SessionLocal
 from api.models.roles import Role
 from api.models.accounts import Account
-from api.dependencies.database import SessionLocal
+
 class Shop:
     def __init__(self, account_id):
         self.account_id = account_id
-        self.select_menu(account_id)
+        self.staff_menu()
+        self.select_menu()
 
-    def select_menu(self, account_id):
+    def select_menu(self):
         with SessionLocal() as db:
-            account = db.query(Account).filter(account_id == Account.id).first()
-            role_id = db.query(Role).filter(account.role_id == Role.id).first().id
-            if role_id > 0 and role_id < 2:
+            account = db.query(Account).filter(Account.id == self.account_id).first()
+            role_id = db.query(Role).filter(Role.id == account.role_id).first().id
+            if role_id == 1 or role_id == 2:
                 self.customer_menu()
             else:
                 self.staff_menu()
+
     """========== STAFF MENU ============"""
     """=================================="""
     def staff_menu(self):
@@ -96,3 +99,5 @@ class Shop:
             elif option == 6:
                 customer_options.get_filtered_menu()
             valid_option_selected = 0
+
+shop = Shop(3)

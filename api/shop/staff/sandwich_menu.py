@@ -48,7 +48,8 @@ def add_new_sandwich():
             price_accepted = True
         except:
             print("\nERROR: Invalid Input, Only Numbers and Decimals Allowed for Price\n")
-    sandwiches.create_sandwich(sandwich_name, price)
+    tags = []
+    sandwiches.create_sandwich(sandwich_name, price, tags)
     print(f"\n==================================\nADDED SANDWICH {sandwich_name} WITH PRICE ${price}\n==================================")
 
 def remove_sandwich():
