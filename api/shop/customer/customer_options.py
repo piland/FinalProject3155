@@ -10,6 +10,7 @@ from api.models.order_details import OrderDetail
 from api.models.promo_codes import PromoCode
 from api.models.sandwiches import Sandwich
 from api.models.reviews import Review
+from api.models.payment_information import PaymentInformation
 
 from api.db_interface import sandwiches as sandwiches_db
 from api.db_interface import recipes as recipes_db
@@ -114,24 +115,28 @@ def place_order(account_id):
                 sandwich_id = order_detail.sandwich_id
                 price = sandwiches_db.get_sandwich_by_id(sandwich_id).price
                 order_total += (price * order_detail.amount)
-
-            payment_information_accepted = 0
-            while payment_information_accepted == 0:
-                show_all_payment_information()
-                print(f"Your Total is {order_total}")
-                payment_id = input("Enter Payment Information ID (Exit/e to Cancel Transaction): ")
-                if payment_id.lower() == "exit" or payment_id.lower() == "e":
-                    placing_order = 0
-                    break
+                print(f"Your Total is: ${order_total}")
+                promo_code_accepted = 0
+                while promo_code_accepted == 0:
+                    promo_code = input("Enter Promo Code (Leave Blank to Skip): ")
+                    if promo_code != "":
+                        #try:
+                        promo_code_object = db.query(PromoCode).filter(promo_code == PromoCode.name).first()
+                        order_total = apply_promo_code(order_total, promo_code_object.name)
+                        print(f"Promo Code Accepted! New Total is: ${order_total}")
+                        promo_code_accepted = 1
+                    #except:
+                        print("Promo Code not Accepted")
+                    else:
+                        promo_code_accepted = 1
+                        pass
                 try:
-                    payment_id = int(payment_id)
-                    selected_payment_information = payment_information_controller.read_one(db, payment_id)
-                    print(f"PAYMENT INFO BALANCE: {selected_payment_information.balance_on_account}")
+                    selected_payment_information = get_payment_information(account_id)
                     if selected_payment_information.balance_on_account > order_total:
                         new_balance = float(selected_payment_information.balance_on_account) - float(order_total)
                         selected_payment_information.balance_on_account = new_balance
-                        payment_information_request.update(payment_id, balance_on_account=new_balance)
-                        print(f"PAYMENT ACCEPTED, NEW BALANCE ON ACCOUNT {payment_id}: ${new_balance}")
+                        payment_information_request.update(selected_payment_information.id, balance_on_account=new_balance)
+                        print(f"PAYMENT ACCEPTED, NEW BALANCE ON ACCOUNT {selected_payment_information.id}: ${new_balance}")
                         payment_information_accepted = 1
                 except Exception as e:
                     print(e)
@@ -156,7 +161,6 @@ def place_order(account_id):
             else:
                 for key, value in new_resource_dict.items():
                     resources_db.update_resource(key, amount=value)
-            resources_db.show_all_resources()
             if placing_order == 0:
                 break
             created_order = order_controller.create(db, order)
@@ -169,6 +173,11 @@ def place_order(account_id):
             if leave_review.lower() == "y":
                 for order_detail_item in cart:
                     write_review(account_id=account_id, sandwich_id=order_detail_item.sandwich_id)
+
+def get_payment_information(account_id):
+    with SessionLocal() as db:
+        payment_information = db.query(PaymentInformation).filter(account_id == PaymentInformation.id).first()
+    return payment_information
 
 def show_all_payment_information():
     with SessionLocal() as db:
@@ -236,34 +245,48 @@ def get_filtered_menu():
 
 def write_review(sandwich_id = None, account_id = None):
     with SessionLocal() as db:
-        if sandwich_id is not None:
-            sandwich = db.query(Sandwich).filter(sandwich_id == Sandwich.id).first()
-            stars_accepted = False
-            while stars_accepted is False:
-                stars = input(f"{sandwich.sandwich_name} Rating (0-5): ")
+        if sandwich_id is None:
+            sandwiches_db.show_all_sandwiches()
+            sandwich_accepted = False
+            while sandwich_accepted is not True:
+                sandwich_id = input("Enter Sandwich ID to Leave Review: ")
                 try:
-                    stars = int(stars)
-                    if stars < 0 or stars > 5:
-                        print("Star Value Must be Between 0 and 5")
+                    sandwich_id = int(sandwich_id)
+                    sandwich = db.query(Sandwich).filter(sandwich_id == Sandwich.id).first()
+                    if sandwich is not None:
+                        sandwich_accepted = True
                     else:
-                        stars_accepted = True
+                        print("Sandwich is not found")
                 except:
-                    print("Stars Must be An Integer")
-            description = input("Comments (Leave Blank to Skip: ")
+                    print("Sandwich ID must be Integer!")
+        sandwich = db.query(Sandwich).filter(sandwich_id == Sandwich.id).first()
+        print(f"SANDWICH ID: {sandwich_id} SANDWICH: {sandwich}")
+        stars_accepted = False
+        while stars_accepted is False:
+            stars = input(f"{sandwich.sandwich_name} Rating (0-5): ")
+            try:
+                stars = int(stars)
+                if stars < 0 or stars > 5:
+                    print("Star Value Must be Between 0 and 5")
+                else:
+                    stars_accepted = True
+            except:
+                print("Stars Must be An Integer")
+        description = input("Comments (Leave Blank to Skip): ")
 
-            if account_id is None:
-                account_id = 1
+        if account_id is None:
+            account_id = 1
 
-            review = {
-                "stars": stars,
-                "description": description,
-                "account_id": account_id,
-                "sandwich_id": sandwich_id
-            }
+        review = {
+            "stars": stars,
+            "description": description,
+            "account_id": account_id,
+            "sandwich_id": sandwich_id
+        }
 
-            review_object = Review(**review)
+        review_object = Review(**review)
 
-            review_controller.create(db, review_object)
+        review_controller.create(db, review_object)
 
 def get_menu_with_reviews():
     with SessionLocal() as db:
@@ -273,7 +296,9 @@ def get_menu_with_reviews():
         for sandwich_item in sandwiches:
             total_stars = 0
             reviews = db.query(Review).filter(sandwich_item.id == Review.sandwich_id).all()
+            print(f"GETTING STARS FOR {sandwich_item}")
             for review_item in reviews:
+                print(f"")
                 total_stars += review_item.stars
             avg_sandwich_stars = total_stars/5
             print(f"{sandwich_item.id}. {sandwich_item.sandwich_name}: {avg_sandwich_stars}/5")
@@ -281,8 +306,10 @@ def get_menu_with_reviews():
 def apply_promo_code(order_total, promo_code):
     with SessionLocal() as db:
         promo_code_discount = db.query(PromoCode).filter(promo_code == PromoCode.name).first().discount
-        new_total = order_total * promo_code_discount
+        new_total = float(order_total) * float(promo_code_discount)
         return new_total
 
 def show_menu():
     sandwiches_db.show_all_sandwiches()
+
+write_review(account_id=1)

@@ -9,7 +9,7 @@ def create(db: Session, request):
         stars=request.stars,
         description=request.description,
         account_id=request.account_id,
-        sandwich_id=request.account_id
+        sandwich_id=request.sandwich_id
     )
 
     try:

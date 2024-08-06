@@ -50,12 +50,6 @@ def report_menu():
         elif option == 7:
             pass
         valid_option_selected = 0
-
-#QUESTION: HOW DOES THE SYSTEM ALERT ME IF THERE ARE INSUFFICIENT INGREDIENTS TO FULFILL AN ORDER?
-#TODO: SHOW WHEN THERE ARENT ENOUGH INGREDIENTS
-def is_enough_ingredients():
-    pass
-
 def show_all_orders():
     with SessionLocal() as db:
         order_list = db.query(Order).all()

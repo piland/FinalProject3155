@@ -75,13 +75,13 @@ class Shop:
             elif option == 1:
                 customer_options.show_menu()
             elif option == 2:
-                customer_options.place_order()
+                customer_options.place_order(account_id=self.account_id)
             elif option == 3:
                 customer_options.check_order()
             elif option == 4:
-                pass
+                customer_options.write_review(account_id=self.account_id)
             elif option == 5:
-                pass
+                customer_options.get_menu_with_reviews()
             elif option == 6:
                 customer_options.get_filtered_menu()
             valid_option_selected = 0

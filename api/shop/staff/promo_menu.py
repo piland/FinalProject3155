@@ -1,3 +1,5 @@
+import datetime
+
 from api.models.promo_codes import PromoCode
 from api.requests import promo_codes as promo_code_request
 from api.dependencies.database import SessionLocal
@@ -90,6 +92,34 @@ def delete_promo_code():
                     print("Promo Code Deleted!")
 
 def modify_promo_code():
-    pass
-
-delete_promo_code()
+    with SessionLocal() as db:
+        promo_code_request.show_all_promo_codes()
+        name_accepted = 0
+        exit = 0
+        while name_accepted == 0:
+            name = input("Enter Name of Promo Code to be Modified (Exit/e to Cancel): ")
+            if name.lower() == "exit" or name.lower() == "e":
+                exit = 1
+                break
+            elif name.replace(" ", "") == "":
+                print("ERROR: Name cannot be blank")
+            else:
+                name = input("What do you want the new name to be?").strip()
+                discount = input("Enter Discount %: ")
+                if (float(discount) == Exception):
+                    while not discount.isdigit():
+                        print("Sorry, invalid number, please try again")
+                        discount = input("Enter Discount %: ")
+                discount = (1 - float(discount)) / 100
+                expiration_date_str = input("Enter the expiration date (MM/DD/YYYY): ").strip()
+                try:
+                    expiration_date = datetime.datetime.strptime(expiration_date_str, "%m/%d/%Y").date()
+                except ValueError:
+                    print("ERROR: Invalid date format, please use MM/DD/YYYY.")
+                    continue
+                promo_code = promo_code_request.update(name.upper(), name, discount, expiration_date)
+                if promo_code:
+                    print("Promo Code Updated Successfully!")
+                else:
+                    print("Unable to update promo code.")
+                name_accepted = True
