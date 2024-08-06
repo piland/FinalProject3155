@@ -2,7 +2,7 @@ import requests
 
 base_url = "http://127.0.0.1:8000"
 
-def create(stars, description):
+def create(stars, description, account_id, sandwich_id):
     url = f"{base_url}/reviews/"
     data = {
         "stars": stars,

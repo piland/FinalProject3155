@@ -1,4 +1,4 @@
-import datetime
+from datetime import datetime
 
 from api.models.promo_codes import PromoCode
 from api.requests import promo_codes as promo_code_request
@@ -35,42 +35,59 @@ def promo_menu():
             promo_code_request.show_all_promo_codes()
         valid_option_selected = 0
 
-#QUESTION: CAN I CREATE AND MANAGE PROMOTIONAL CODES, INCLUDING SETTING EXPIRATION DATES?
-#TODO: CREATE PROMO CODES, ADD PROMO API
 def create_promo_code():
-    creating_promo_code = 1
-    while creating_promo_code == 1:
-        name_accepted = 0
-        while name_accepted == 0:
-            name = input("Enter Name of New Promo Code (Exit/e to Cancel): ")
-            if name.lower() == "exit" or name.lower() == "e":
-                creating_promo_code = 0
-                break
-            elif name.replace(" ", "") == "":
-                print("ERROR: Name cannot be blank")
-            else:
-                name_accepted = 1
-        discount_accepted = 0
-        if creating_promo_code == 1:
-            while discount_accepted == 0:
-                discount = input("Enter Discount %: ")
-                if discount.replace(" ", "") == "":
-                    print("ERROR: Discount cannot be blank")
-                elif "." in discount:
-                    try:
-                        discount = float(discount)
-                        promo_code_request.create(name, discount)
-                        discount_accepted = 1
-                    except:
-                        print("ERROR: Invalid Input")
+    with SessionLocal() as db:
+        creating_promo_code = 1
+        while creating_promo_code == 1:
+            name_accepted = 0
+            while name_accepted == 0:
+                name = input("Enter Name of New Promo Code (Exit/e to Cancel): ")
+                if name.lower() == "exit" or name.lower() == "e":
+                    creating_promo_code = 0
+                    break
+                elif name.replace(" ", "") == "":
+                    print("ERROR: Name cannot be blank")
                 else:
+                    name_accepted = 1
+            discount_accepted = 0
+            if creating_promo_code == 1:
+                while discount_accepted == 0:
+                    discount = input("Enter Discount %: ")
+                    if discount.replace(" ", "") == "":
+                        print("ERROR: Discount cannot be blank")
+                    elif "." in discount:
+                        try:
+                            discount = float(discount)
+                            discount_accepted = 1
+                        except:
+                            print("ERROR: Invalid Input")
+                    else:
+                        try:
+                            discount = "."+discount
+                            discount = float(discount)
+                            discount_accepted = 1
+                        except:
+                            print("ERROR: Invalid Input")
+                date_accepted = 0
+                while date_accepted == 0:
+                    date = input("Enter Date (MM-DD-YYYY): ")
                     try:
-                        discount = "."+discount
-                        discount = float(discount)
-                        promo_code_request.create(name, discount)
-                        discount_accepted = 1
+                        date_format = "%m-%d-%Y"
+                        date_object = datetime.strptime(date, date_format)
+                        promo_dict = {
+                            "name": name,
+                            "discount": discount,
+                            "expiration_date": date_object
+                        }
+                        promo_code = PromoCode(**promo_dict)
+                        db.add(promo_code)
+                        db.commit()
+                        db.refresh(promo_code)
+                        date_accepted = 1
+                        creating_promo_code = 0
                     except:
-                        print("ERROR: Invalid Input")
+                        print("ERROR: Date Must be In Format (MM-DD-YYYY)")
+
 
 def delete_promo_code():
     with SessionLocal() as db:

@@ -23,7 +23,7 @@ def recipe_menu():
         if option == 0:
             exit = 1
         elif option == 1:
-            pass
+            modify_sandwich_recipe()
         valid_option_selected = 0
 
 def modify_sandwich_recipe():

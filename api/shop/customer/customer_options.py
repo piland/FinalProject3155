@@ -114,33 +114,33 @@ def place_order(account_id):
             for order_detail in cart:
                 sandwich_id = order_detail.sandwich_id
                 price = sandwiches_db.get_sandwich_by_id(sandwich_id).price
-                order_total += (price * order_detail.amount)
-                print(f"Your Total is: ${order_total}")
-                promo_code_accepted = 0
-                while promo_code_accepted == 0:
-                    promo_code = input("Enter Promo Code (Leave Blank to Skip): ")
-                    if promo_code != "":
-                        #try:
+                order_total += (float(price) * float(order_detail.amount))
+            print(f"Your Total is: ${order_total}")
+            promo_code_accepted = 0
+            while promo_code_accepted == 0:
+                promo_code = input("Enter Promo Code (Leave Blank to Skip): ")
+                if promo_code != "":
+                    try:
                         promo_code_object = db.query(PromoCode).filter(promo_code == PromoCode.name).first()
                         order_total = apply_promo_code(order_total, promo_code_object.name)
                         print(f"Promo Code Accepted! New Total is: ${order_total}")
                         promo_code_accepted = 1
-                    #except:
+                    except:
                         print("Promo Code not Accepted")
-                    else:
-                        promo_code_accepted = 1
-                        pass
-                try:
-                    selected_payment_information = get_payment_information(account_id)
-                    if selected_payment_information.balance_on_account > order_total:
-                        new_balance = float(selected_payment_information.balance_on_account) - float(order_total)
-                        selected_payment_information.balance_on_account = new_balance
-                        payment_information_request.update(selected_payment_information.id, balance_on_account=new_balance)
-                        print(f"PAYMENT ACCEPTED, NEW BALANCE ON ACCOUNT {selected_payment_information.id}: ${new_balance}")
-                        payment_information_accepted = 1
-                except Exception as e:
-                    print(e)
-                    print("ERROR: Payment ID must be Integer and Exist in Available Payment Options")
+                else:
+                    promo_code_accepted = 1
+                    pass
+            try:
+                selected_payment_information = get_payment_information(account_id)
+                if selected_payment_information.balance_on_account > order_total:
+                    new_balance = float(selected_payment_information.balance_on_account) - float(order_total)
+                    selected_payment_information.balance_on_account = new_balance
+                    payment_information_request.update(selected_payment_information.id, balance_on_account=new_balance)
+                    print(f"PAYMENT ACCEPTED, NEW BALANCE ON ACCOUNT {selected_payment_information.id}: ${new_balance}")
+                    payment_information_accepted = 1
+            except Exception as e:
+                print(e)
+                print("ERROR: Payment ID must be Integer and Exist in Available Payment Options")
             total_recipe_dict = {}
             for item in cart:
                 recipe_dict = recipes_db.get_recipe_dict(item.sandwich_id)

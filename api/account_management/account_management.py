@@ -16,7 +16,6 @@ class AccountManagement:
 
     """========== LOGIN OR SIGNUP ============"""
     """=================================="""
-
     def login_menu(self):
         print("\n======= Welcome ========")
         while True:
@@ -116,7 +115,7 @@ class AccountManagement:
         roles = api.controllers.roles.read_all(db=SessionLocal())
         for role in roles:
             if role.id != 1:
-                print(f"{role.id}: {role.name}, {role.description}")
+                print(f"{role.id}: {role.title}, {role.description}")
         role_id = input("Role ID: ")
         while not role_id.isdigit() or int(role_id) not in [role.id for role in roles]:
             print("Sorry, that isn't a valid role. Please choose one of the above numbers.")
@@ -136,6 +135,8 @@ class AccountManagement:
             payment_info = self.create_payment_information(balance, card_info, payment_type)
             if payment_info:
                 payment_information_id = payment_info['id']
+        else:
+            payment_information_id = 1
 
         response = api.requests.accounts.create(
             name=name,
@@ -150,6 +151,7 @@ class AccountManagement:
         if response:
             account_id = response.get("id")
             print(f"Account Created Successfully: {response}")
+            Shop(account_id)
             return account_id
         else:
             print("Failed to Create Account")

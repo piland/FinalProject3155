@@ -11,7 +11,6 @@ from api.models.accounts import Account
 class Shop:
     def __init__(self, account_id):
         self.account_id = account_id
-        self.staff_menu()
         self.select_menu()
 
     def select_menu(self):
@@ -100,4 +99,3 @@ class Shop:
                 customer_options.get_filtered_menu()
             valid_option_selected = 0
 
-shop = Shop(3)
